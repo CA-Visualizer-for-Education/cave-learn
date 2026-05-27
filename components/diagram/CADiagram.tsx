@@ -1,9 +1,8 @@
 // components/diagram/CADiagram.tsx
 // Interactive Clean Architecture diagram.
-// Renders CA_LAYERS as rectangles and CA_COMPONENTS as clickable boxes.
-// Props: selectedId (string | null), onSelect ((id: string | null) => void)
+// Renders the diagram background containers and keeps the click-to-clear behavior.
 
-import { CA_COMPONENTS, CA_LAYERS } from '@/lib/ca-data'
+import { createCAContainerSvg } from '@/components/diagram/CAContainerSvgs'
 
 interface CADiagramProps {
   selectedId: string | null
@@ -11,5 +10,7 @@ interface CADiagramProps {
 }
 
 export default function CADiagram({ selectedId, onSelect }: CADiagramProps) {
-  return <div onClick={() => onSelect(null)}></div>
+  void selectedId
+
+  return <div onClick={() => onSelect(null)}>{createCAContainerSvg()}</div>
 }

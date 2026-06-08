@@ -1,8 +1,53 @@
 .node {
   cursor: pointer;
-  fill: none;
+  --node-text: white;
 }
+
+.interfaceAdapters {
+  --node-bg: var(--color-brand-green);
+}
+
+.applicationBusinessRules {
+  --node-bg: var(--color-brand-pink);
+}
+
+.enterpriseBusinessRules {
+  --node-bg: var(--color-brand-yellow);
+  --node-text: black;
+}
+
+.frameworksAndDrivers {
+  --node-bg: var(--color-brand-blue);
+}
+
+.selectedInterfaceAdapters {
+  --selected-color: #236334;
+}
+
+.selectedApplicationBusinessRules {
+  --selected-color: #941B45;
+}
+
+.selectedEnterpriseBusinessRules {
+  --selected-color: #FCAA2F;
+}
+
+.selectedFrameworksAndDrivers {
+  --selected-color: #295A88;
+}
+
+.nodeRect {
+  fill: var(--node-bg);
+}
+
+.selected {
+  fill: var(--selected-color);
+  stroke: white;
+  stroke-width: 1.5px;
+  filter: drop-shadow(2px 3px 3px var(--selected-color))
+}
+
 .nodeLabel {
-  fill: white;
+  fill: var(--node-text);
   font-weight: 700;
 }

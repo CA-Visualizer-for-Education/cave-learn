@@ -1,13 +1,77 @@
-/* Navbar.module.css */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-navbar);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-6);
+  height: var(--navbar-height);
+  padding: 0 var(--space-6);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
 
-.navbar {}
+.logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+  width: 180px;
+  min-width: 180px;
+  text-decoration: none;
+}
 
-.logo {}
+.logoImage {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+}
 
-.logoBadge {}
+.logoText {
+  flex-shrink: 0;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+}
 
-.links {}
+.learnBadge {
+  flex-shrink: 0;
+  border-radius: 4px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
 
-.link {}
+.links {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+}
 
-.linkActive {}
+.link {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  width: 100px;
+  height: 40px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-text-mute);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.linkActive {
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}

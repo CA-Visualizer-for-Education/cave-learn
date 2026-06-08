@@ -2,6 +2,7 @@ import styles from "./DiagramNode.module.css";
 
 interface DiagramNodeProps {
   label: string;
+  isSelected: boolean;
   onClick: () => void;
 }
 
@@ -28,35 +29,53 @@ const titleToCategory: Record<string, NodeCategory> = {
   database: NodeCategory.FrameworksAndDrivers,
 };
 
-const categoryToColor: Record<NodeCategory, string> = {
-  [NodeCategory.InterfaceAdapters]: "var(--color-brand-green)",
-  [NodeCategory.ApplicationBusinessRules]: "var(--color-brand-pink)",
-  [NodeCategory.EnterpriseBusinessRules]: "var(--color-brand-yellow)",
-  [NodeCategory.FrameworksAndDrivers]: "var(--color-brand-blue)",
+const categoryToClassName: Record<NodeCategory, string> = {
+  [NodeCategory.InterfaceAdapters]: styles.interfaceAdapters,
+  [NodeCategory.ApplicationBusinessRules]: styles.applicationBusinessRules,
+  [NodeCategory.EnterpriseBusinessRules]: styles.enterpriseBusinessRules,
+  [NodeCategory.FrameworksAndDrivers]: styles.frameworksAndDrivers,
 };
 
-export const DiagramNode = ({ label, onClick }: DiagramNodeProps) => {
+const categoryToSelectedClassName: Record<NodeCategory, string> = {
+  [NodeCategory.InterfaceAdapters]: styles.selectedInterfaceAdapters,
+  [NodeCategory.ApplicationBusinessRules]:
+    styles.selectedApplicationBusinessRules,
+  [NodeCategory.EnterpriseBusinessRules]:
+    styles.selectedEnterpriseBusinessRules,
+  [NodeCategory.FrameworksAndDrivers]: styles.selectedFrameworksAndDrivers,
+};
+
+const NODE_WIDTH = 150;
+const NODE_HEIGHT = 33;
+const SHADOW_PADDING = 8;
+
+export const DiagramNode = ({
+  label,
+  isSelected,
+  onClick,
+}: DiagramNodeProps) => {
   const category = titleToCategory[label.toLowerCase()];
   if (!category) throw new Error(`DiagramNode: unknown label: "${label}"`);
 
   return (
     <svg
-      width="160"
-      height="40"
-      viewBox="0 0 150 36"
+      width={NODE_WIDTH + SHADOW_PADDING * 2}
+      height={NODE_HEIGHT + SHADOW_PADDING * 2}
       onClick={onClick}
-      className={styles.node}
+      className={`${styles.node} ${categoryToClassName[category]} ${categoryToSelectedClassName[category]}`}
     >
       <rect
-        width="100%"
-        height="100%"
+        x={SHADOW_PADDING}
+        y={SHADOW_PADDING}
+        width={NODE_WIDTH}
+        height={NODE_HEIGHT}
         rx="5"
         ry="5"
-        fill={categoryToColor[category]}
+        className={`${styles.nodeRect} ${isSelected ? styles.selected : ""}`}
       />
       <text
-        x="50%"
-        y="50%"
+        x={NODE_WIDTH / 2 + SHADOW_PADDING}
+        y={NODE_HEIGHT / 2 + SHADOW_PADDING}
         textAnchor="middle"
         dominantBaseline="middle"
         className={`text-mono ${styles.nodeLabel}`}

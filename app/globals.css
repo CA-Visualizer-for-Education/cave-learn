@@ -122,6 +122,9 @@
   --z-overlay: 100;
   --z-navbar:  200;
   --z-modal:   300;
+
+  /* Fixed navbar height — keep in sync with components/layout/Navbar.module.css */
+  --navbar-height: 64px;
 }
 
 
@@ -371,9 +374,9 @@ img, svg {
    .content-area   max-width container, horizontally centered
    ================================================================ */
 
-/* Offset for the fixed 56px navbar */
+/* Offset for the fixed navbar */
 .page-shell {
-  padding-top: 56px;
+  padding-top: var(--navbar-height);
   min-height: 100vh;
 }
 

@@ -8,7 +8,7 @@ import styles from './StepCard.module.css'
 
 type StepCardProps = {
   label: string
-  image: ReactNode
+  image?: ReactNode
   title: string
   description: string
   ctaLabel: string

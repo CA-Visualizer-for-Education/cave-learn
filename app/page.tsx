@@ -32,12 +32,24 @@ import styles from './page.module.css'
 
 export default function HomePage() {
   return (
-      <main className="page-shell">
-          <HeroSection />
-          <section className={`${styles.cardGrid} content-area`}>
-              <StepCard />
-              <StepCard />
-          </section>
-      </main>
+    <main className="page-shell">
+      <HeroSection />
+      <section className={`${styles.cardGrid} content-area`}>
+        <StepCard
+          label="Learn"
+          title="Explore the diagram"
+          description="Tap any component to learn what it does, what it depends on, and how it talks to the rest of the system."
+          ctaLabel="Start exploring"
+          ctaHref="/diagram"
+        />
+        <StepCard
+          label="Test"
+          title="Fill in the diagram"
+          description="Drag the pieces into the right layer. Check your work, fix the red bits, and earn a full-green score."
+          ctaLabel="Try the exercise"
+          ctaHref="/exercise"
+        />
+      </section>
+    </main>
   )
 }

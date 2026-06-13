@@ -1,17 +1,21 @@
+import type { ReactNode } from 'react'
 import { CA_LAYERS } from '@/lib/ca-data'
 
 type ContainerSvgProps = {
-  x: number
-  y: number
-  width: number
-  height: number
-  title: string
-  fill: string
+  children: ReactNode
   stroke: string
 }
 
-function splitTitle(title: string) {
-  if (title.length <= 18) return [title]
+type LayerLabelProps = {
+  x: number
+  y: number
+  title: string
+  maxLineLength?: number
+  textAnchor?: 'start' | 'middle'
+}
+
+function splitTitle(title: string, maxLineLength = 24) {
+  if (title.length <= maxLineLength) return [title]
 
   const words = title.split(' ')
   const lines: string[] = []
@@ -19,7 +23,7 @@ function splitTitle(title: string) {
 
   for (const word of words) {
     const nextLine = currentLine ? `${currentLine} ${word}` : word
-    if (nextLine.length > 18 && currentLine) {
+    if (nextLine.length > maxLineLength && currentLine) {
       lines.push(currentLine)
       currentLine = word
       continue
@@ -32,95 +36,77 @@ function splitTitle(title: string) {
   return lines
 }
 
-function LayerContainerSvg({ x, y, width, height, title, fill, stroke }: ContainerSvgProps) {
-  const lines = splitTitle(title)
-  const centerY = height / 2
-  const lineSpacing = 18
-  const firstLineOffset = lines.length > 1 ? -(lineSpacing / 2) * (lines.length - 1) : 0
+function LayerContainerSvg({ children, stroke }: ContainerSvgProps) {
+  return (
+    <g fill={stroke} fillOpacity={0.18} stroke={stroke} strokeWidth={1.5}>
+      {children}
+    </g>
+  )
+}
+
+function LayerLabel({ x, y, title, maxLineLength, textAnchor = 'start' }: LayerLabelProps) {
+  const lines = splitTitle(title, maxLineLength)
+  const lineSpacing = 24
 
   return (
-    <svg x={x} y={y} width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-      <rect
-        x={0}
-        y={0}
-        width={width}
-        height={height}
-        rx={10}
-        ry={10}
-        fill={fill}
-        stroke={stroke}
-        strokeWidth={3}
-      />
-      <text
-        x={width / 2}
-        y={centerY + firstLineOffset}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill="#ffffff"
-        fontSize={18}
-        fontWeight={700}
-        fontFamily="inherit"
-      >
-        {lines.map((line, index) => (
-          <tspan key={`${title}-${line}-${index}`} x={width / 2} dy={index === 0 ? 0 : lineSpacing}>
-            {line}
-          </tspan>
-        ))}
-      </text>
-    </svg>
+    <text
+      x={x}
+      y={y}
+      textAnchor={textAnchor}
+      fill="#1A1A1F"
+      fontSize={20}
+      fontWeight={700}
+      fontFamily="var(--font-sans)"
+      aria-label={title}
+    >
+      {lines.map((line, index) => (
+        <tspan key={`${title}-${line}-${index}`} x={x} dy={index === 0 ? 0 : lineSpacing}>
+          {line}
+        </tspan>
+      ))}
+    </text>
   )
 }
 
 export function createCAContainerSvg() {
   return (
     <svg
-      width={1180}
-      height={720}
-      viewBox="0 0 1180 720"
+      width={894}
+      height={553}
+      viewBox="0 0 894 553"
       role="img"
       aria-label="Clean Architecture container diagram backgrounds"
     >
-      <rect x={35} y={20} width={1110} height={660} rx={12} ry={12} fill="#ffffff" stroke="#E7E7E7" strokeWidth={2} />
+      <rect width={880} height={540} fill="#ffffff" />
 
       <LayerContainerSvg
-        x={60}
-        y={40}
-        width={260}
-        height={500}
-        title={CA_LAYERS['interface-adapters'].name}
-        fill={CA_LAYERS['interface-adapters'].colorHex}
         stroke={CA_LAYERS['interface-adapters'].colorHex}
-      />
+      >
+        <rect x={33} y={31} width={209.241} height={379.208} rx={8} ry={8} />
+      </LayerContainerSvg>
 
       <LayerContainerSvg
-        x={340}
-        y={40}
-        width={760}
-        height={510}
-        title={CA_LAYERS['application-business-rules'].name}
-        fill={CA_LAYERS['application-business-rules'].colorHex}
         stroke={CA_LAYERS['application-business-rules'].colorHex}
-      />
+      >
+        <path d="M252.205 38C252.205 34.134 255.339 31 259.205 31H603.904C607.77 31 610.904 34.134 610.904 38V223.583C610.904 227.449 614.038 230.583 617.904 230.583H853C856.866 230.583 860 233.717 860 237.583V403.208C860 407.074 856.866 410.208 853 410.208H259.205C255.339 410.208 252.205 407.074 252.205 403.208V38Z" />
+      </LayerContainerSvg>
 
       <LayerContainerSvg
-        x={790}
-        y={40}
-        width={310}
-        height={240}
-        title={CA_LAYERS['enterprise-business-rules'].name}
-        fill={CA_LAYERS['enterprise-business-rules'].colorHex}
         stroke={CA_LAYERS['enterprise-business-rules'].colorHex}
-      />
+      >
+        <rect x={620.867} y={31} width={239.133} height={189.604} rx={8} ry={8} />
+      </LayerContainerSvg>
 
       <LayerContainerSvg
-        x={60}
-        y={560}
-        width={1040}
-        height={100}
-        title={CA_LAYERS['frameworks-drivers'].name}
-        fill={CA_LAYERS['frameworks-drivers'].colorHex}
         stroke={CA_LAYERS['frameworks-drivers'].colorHex}
-      />
+      >
+        <rect x={33} y={420.188} width={827} height={89.812} rx={8} ry={8} />
+      </LayerContainerSvg>
+
+      <LayerLabel x={55} y={90} title={CA_LAYERS['interface-adapters'].name} />
+      <LayerLabel x={280} y={90} title={CA_LAYERS['application-business-rules'].name} maxLineLength={32} />
+      <LayerLabel x={640} y={90} title={CA_LAYERS['enterprise-business-rules'].name} maxLineLength={20} />
+      <LayerLabel x={446.5} y={470} title={CA_LAYERS['frameworks-drivers'].name} textAnchor="middle" />
     </svg>
   )
 }

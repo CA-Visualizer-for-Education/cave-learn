@@ -3,7 +3,7 @@
 // Contains: eyebrow label, logo mark, headline, subtitle, stats chips.
 // Stats data lives in ca-data.ts — import CA_LAYERS for the dot colors.
 
-import { CA_LAYERS }from '@/lib/ca-data'
+import { CA_LAYERS } from '@/lib/ca-data'
 import styles from './HeroSection.module.css'
 
 export default function HeroSection() {

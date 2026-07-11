@@ -1,0 +1,11 @@
+.description-button {
+    border-radius: var(--radius-sm);
+    /*min-height: 30px;*/
+    width: 100%;
+    margin-bottom: 8px;
+    border: none;
+    background-color: #e6dfd6; /* pearl bush color on Figma */
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 0.8rem; /* slightly smaller than the 1rem default */
+}

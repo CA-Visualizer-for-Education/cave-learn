@@ -1,34 +1,80 @@
-.activityCard{
-    border-radius: 22px;
-    margin-bottom: 56px;
-    height: 150px;
-    border: 1px solid #E6DFD5;
-    display: flex;
-    gap: 90px;
+.cardLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
-@media (max-width: 768px) {
-    .activityCard{
-        width: 768px;
-    }
+.activityCard {
+  border-radius: 22px;
+  margin-bottom: 56px;
+  min-height: 150px;
+  border: 1px solid #E6DFD5;
+  display: flex;
+  gap: 90px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.placeholderCard{
-    background-color: #E6DFD5;
+.placeholderCard {
+  background-color: #E6DFD5;
 }
 
-.filledCard{
-    background-color: #FFFFFF;
-    padding: 25px 70px
+.filledCard {
+  background-color: #FFFFFF;
+  padding: 25px 70px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.cardFrame{
-    flex: 1;
-    border-radius: 14px;
+.cardLink:hover .filledCard {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-raised);
 }
 
-.cardImage{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.cardFrame {
+  flex: 1;
+  border-radius: 14px;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.cardImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  background-color: #DDECF8;
+}
+
+.cardImage img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  .activityCard {
+    gap: var(--space-6);
+  }
+
+  .filledCard {
+    padding: 25px 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .activityCard {
+    gap: 0;
+    min-height: unset;
+  }
+
+  .filledCard {
+    padding: var(--space-5) var(--space-6);
+  }
+
+  .cardImage {
+    display: none;
+  }
 }

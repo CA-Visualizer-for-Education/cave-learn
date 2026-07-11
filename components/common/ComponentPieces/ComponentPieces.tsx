@@ -1,5 +1,5 @@
 'use client'
-// components/exercise/ComponentPieces/ComponentPieces.tsx
+// components/common/ComponentPieces/ComponentPieces.tsx
 // Right-hand panel showing the draggable CA component chips to be placed on the board.
 import { type LayerId } from "@/lib/ca-data";
 import styles from './ComponentPieces.module.css';

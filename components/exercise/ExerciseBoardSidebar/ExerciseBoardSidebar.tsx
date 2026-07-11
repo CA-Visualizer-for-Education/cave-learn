@@ -1,7 +1,7 @@
 'use client';
 // components/exercise/ExerciseBoardSidebar/ExerciseBoardSidebar.tsx
 // The sidebar of the exercise page.
-import ComponentPieces from "../ComponentPieces/ComponentPieces"
+import ComponentPieces from "../../common/ComponentPieces/ComponentPieces"
 import { CA_COMPONENTS } from "@/lib/ca-data"
 import styles from "./ExerciseBoardSidebar.module.css"
 import { useDroppable } from '@dnd-kit/react'

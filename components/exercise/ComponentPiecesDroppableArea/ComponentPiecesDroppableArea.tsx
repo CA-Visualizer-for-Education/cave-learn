@@ -29,7 +29,7 @@ export default function ComponentPiecesDroppableArea({ buttonLabel, buttonLayer,
     const { ref } = useDroppable({ id : droppableID })
     return (
         <div className={`${styles['droppable']} ${styles[droppableID + '-droppable']}`} ref={ref}>
-            {buttonLabel != "" && <ComponentPieces key={buttonLabel} layer={buttonLayer} label={buttonLabel} inDroppable={true} isVerified={isVerified} buttonOutline={buttonOutline}/>}
+            {buttonLabel != "" && <ComponentPieces key={buttonLabel} layer={buttonLayer} label={buttonLabel} inDroppable={true} isVerified={isVerified} draggable={!isVerified} buttonOutline={buttonOutline}/>}
         </div>
     )
 }

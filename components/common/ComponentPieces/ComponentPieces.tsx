@@ -9,6 +9,7 @@ import { useDraggable } from "@dnd-kit/react"
 label: Represents what component of clean architecture the button represents and is used as its id.
 layer: Represents what layer of clean architecture the button represents.
 inDroppable: Is true if the button is to be placed in a droppable area.
+draggable: Is true if the button is to be draggable.
 buttonOutline: Is either "button--correct" if the button is in the right droppable area or "button-incorrect" otherwise.
 isVerified: Whether or not the current board has been verified (check work has been clicked).
 */
@@ -16,6 +17,7 @@ interface ComponentPiecesProps {
   label: string;
   layer: string;
   inDroppable: boolean;
+  draggable: boolean
   buttonOutline: string;
   isVerified: boolean;
 }
@@ -45,7 +47,7 @@ const layerToBadge : Record<LayerId, string> = {
   'frameworks-drivers' : "badge badge--blue"
 }
 
-export default function ComponentPieces({ label, layer, inDroppable, buttonOutline, isVerified } : ComponentPiecesProps) {
+export default function ComponentPieces({ label, layer, inDroppable, draggable, buttonOutline, isVerified } : ComponentPiecesProps) {
   // const {ref} = useDraggable({ id: label }) is removed from here to prevent unnecessary ids from being created if a button is not draggable
   
   /* If the button is in droppable, we need to move the entire button up the height equivalent to the height of the sublabel. 
@@ -59,7 +61,7 @@ export default function ComponentPieces({ label, layer, inDroppable, buttonOutli
       </div>
     </button>
     :
-    <button type="button" className={inDroppable ? `${styles['individual-button--container']} ${styles['button--in-droppable']}` : styles['individual-button--container']} ref={useDraggable({ id: label }).ref}>
+    <button type="button" className={inDroppable ? `${styles['individual-button--container']} ${styles['button--in-droppable']}` : styles['individual-button--container']} ref={draggable ? useDraggable({ id: label }).ref : null}>
       {getSubLabel(label) != "" ? <div className={styles['button--sublabel']}>{getSubLabel(label)}</div> : <div className={styles['button--no-sublabel']}></div>}
       <div className={inDroppable ? `${layerToBadge[layer as LayerId]} ${styles['exercise--button']} ${styles['button--main-label']} ${styles['exercise--button-in-droppable']}` : `${layerToBadge[layer as LayerId]} ${styles['exercise--button']} ${styles['button--main-label']}`}>
         {capitalizeWords(label)}

@@ -64,10 +64,10 @@ export default function ExerciseBoardSidebar({ isPlaced, isVerified, score, hand
         </div>
         <div className={styles['sidebar--incorrect-components']}>
             <div className={styles['button--column']}>
-                {CA_COMPONENTS.filter((component) => (isPlaced[component.id] != component.id)).map((component, index) => (index % 2 == 0 && <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} buttonOutline={""}/>))}
+                {CA_COMPONENTS.filter((component) => (isPlaced[component.id] != component.id)).map((component, index) => (index % 2 == 0 && <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} draggable={!isVerified} buttonOutline={""}/>))}
             </div>
             <div className={styles['button--column']}>
-                {CA_COMPONENTS.filter((component) => (isPlaced[component.id] != component.id)).map((component, index) => (index % 2 == 1 && <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} buttonOutline={""}/>))}
+                {CA_COMPONENTS.filter((component) => (isPlaced[component.id] != component.id)).map((component, index) => (index % 2 == 1 && <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} draggable={!isVerified} buttonOutline={""}/>))}
             </div>
         </div>
         <div className={styles['retry-button--container']}>
@@ -84,10 +84,10 @@ export default function ExerciseBoardSidebar({ isPlaced, isVerified, score, hand
         </div>
         <div className={styles['buttons--container']} ref={useDroppable({id : "sidebar-droppable"}).ref}>
             <div className={styles['button--column']}>
-                {CA_COMPONENTS.filter((component) => (isPlaced[component.id] == "")).map((component, index) => (index % 2 == 0 && <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} buttonOutline={""}/>))}
+                {CA_COMPONENTS.filter((component) => (isPlaced[component.id] == "")).map((component, index) => (index % 2 == 0 && <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} draggable={!isVerified} buttonOutline={""}/>))}
             </div>
             <div className={styles['button--column']}>
-                {CA_COMPONENTS.filter((component) => (isPlaced[component.id] == "")).map((component, index) => (index % 2 == 1 && <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} buttonOutline={""}/>))}
+                {CA_COMPONENTS.filter((component) => (isPlaced[component.id] == "")).map((component, index) => (index % 2 == 1 && <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} draggable={!isVerified} buttonOutline={""}/>))}
             </div>
         </div>
         <div className={styles['check-work-reset--container']}>

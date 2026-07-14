@@ -4,11 +4,12 @@
 import ExerciseBoardSubheader from "./ExerciseBoardSubheader/ExerciseBoardSubheader"
 import ExerciseBoardSidebar from "./ExerciseBoardSidebar/ExerciseBoardSidebar"
 import ComponentBoard from "./ComponentBoard/ComponentBoard"
-import { Box, IconButton, Snackbar } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import { Box } from "@mui/material";
 import { useState } from 'react'
 import { CA_COMPONENTS } from "@/lib/ca-data";
 import { DragDropProvider } from "@dnd-kit/react";
+import { ToastContainer, toast } from 'react-toastify';
+import WarningToast from "./WarningToast/WarningToast";
 
 export default function ExerciseBoard() {
   /* These state variables indicate where each draggable is and what each droppable is filled with */
@@ -16,11 +17,6 @@ export default function ExerciseBoard() {
   const [isFilled, setIsFilled] = useState(Object.fromEntries(CA_COMPONENTS.map((component, _) => [component.id, ""])));
   const [score, setScore] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
-  const [warningOpen, setWarningOpen] = useState(false);
-
-  function handleWarningClose(): void {
-    setWarningOpen(false);
-  }
 
   function resetBoard(){
     setIsPlaced(Object.fromEntries(CA_COMPONENTS.map((component, _) => [component.id, ""])));
@@ -43,32 +39,18 @@ export default function ExerciseBoard() {
       setScore(Object.entries(isFilled).filter((componentDroppable) => (componentDroppable[0] == componentDroppable[1])).length);
       setIsVerified(true);
     } else {
-      setWarningOpen(true);
+      toast(WarningToast, {
+        toastId: "incomplete-diagram-warning", // prevents duplicate toasts
+        closeButton: false,
+        hideProgressBar: true,
+        position: "top-right"
+      })
     }
   }
 
-  const warningAction = (
-    <>
-      <IconButton
-          size="small"
-          aria-label="close"
-          color="inherit"
-          onClick={handleWarningClose}
-        >
-          <CloseIcon fontSize="small" />
-      </IconButton>
-    </>
-  );
 
   return <>
-    <Snackbar
-      open={warningOpen}
-      autoHideDuration={5000}
-      onClose={handleWarningClose}
-      message="Complete the diagram before checking your work"
-      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      action={warningAction}
-    />
+    <ToastContainer autoClose={5000} />
     <DragDropProvider
       onDragEnd={(event) => {
         if(event.canceled || event.operation.target?.id == null){

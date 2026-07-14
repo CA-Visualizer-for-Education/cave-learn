@@ -1,0 +1,21 @@
+.warning--contents {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+
+}
+
+.warning--leading-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--color-brand-yellow);
+}
+
+.btn--close {
+  aspect-ratio: 1;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 1.5px solid var(--color-border);
+}

@@ -197,9 +197,6 @@ export default function ExerciseBoardSidebar({
             <button
               className={`btn btn--primary ${styles["btn--check-work"]} ${CA_COMPONENTS.some((component) => isPlaced[component.id] === "") && styles["btn--check-work--incomplete-diagram"]}`}
               onClick={handleCheckWork}
-              // disabled={
-              //     CA_COMPONENTS.some((component) => (isPlaced[component.id] == ""))
-              // }
             >
               Check My Work
             </button>

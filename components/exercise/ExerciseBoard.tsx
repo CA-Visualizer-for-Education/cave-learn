@@ -42,15 +42,16 @@ export default function ExerciseBoard() {
       toast(WarningToast, {
         toastId: "incomplete-diagram-warning", // prevents duplicate toasts
         closeButton: false,
-        hideProgressBar: true,
-        position: "top-right"
+        customProgressBar: true,
+        position: "bottom-left",
+        autoClose: 5000,
       })
     }
   }
 
 
   return <>
-    <ToastContainer autoClose={5000} />
+    <ToastContainer  />
     <DragDropProvider
       onDragEnd={(event) => {
         if(event.canceled || event.operation.target?.id == null){

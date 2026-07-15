@@ -1,18 +1,24 @@
-.warning--contents {
+.warning-contents {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.warning-icon-text-group {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-3);
-
 }
 
-.warning--leading-icon {
+.warning-icon {
   flex-grow: 0;
   flex-shrink: 0;
   width: 28px;
   height: 28px;
-  color: var(--color-warn);
 }
 
 .btn--close {

@@ -1,5 +1,5 @@
 import { ToastContentProps } from "react-toastify";
-import styles from "./WarningToast.module.css";
+import styles from "./StandardToast.module.css";
 import { MdClose } from "react-icons/md";
 import { IconType } from "react-icons";
 
@@ -17,31 +17,31 @@ interface WithoutIconProps extends BaseProps {
   iconColor?: null,
 }
 
-type WarningToastData = WithIconProps | WithoutIconProps;
+type StandardToastData = WithIconProps | WithoutIconProps;
 
-export default function WarningToast(
+export default function StandardToast(
   {
     data,
     closeToast,
     isPaused,
     toastProps,
-  }: ToastContentProps<WarningToastData>,
+  }: ToastContentProps<StandardToastData>,
 ) {
   const closeBtnRadius = 50;
   const closeBtnStrokeWidth = 5;
 
   return (
-    <div className={styles["warning-contents"]}>
-      <div className={styles["warning-icon-text-group"]}>
+    <div className={styles["contents"]}>
+      <div className={styles["icon-text-group"]}>
         {
           data.Icon
             && data.iconColor
-            && <data.Icon color={data.iconColor} className={styles["warning-icon"]}/>
+            && <data.Icon color={data.iconColor} className={styles["icon"]}/>
         }
         <p className={"text-body"}>{data.text}</p>
       </div>
       <button 
-        className={`btn btn--secondary ${styles["btn--close"]}`}
+        className={`btn btn--secondary ${styles["close-btn"]}`}
         onClick={() => closeToast()}
       >
         <svg 
@@ -55,7 +55,7 @@ export default function WarningToast(
             cy="50"
             r={closeBtnRadius - closeBtnStrokeWidth / 2}
             strokeWidth={closeBtnStrokeWidth}
-            className={styles["close-ring--bg"]}
+            className={styles["close-ring-bg"]}
           />
           <circle
             cx="50"
@@ -63,7 +63,7 @@ export default function WarningToast(
             r={closeBtnRadius - closeBtnStrokeWidth / 2}
             strokeWidth={closeBtnStrokeWidth}
             pathLength="100"
-            className={styles["close-ring--fg"]}
+            className={styles["close-ring-fg"]}
             style={{
               animationDuration: `${
                 typeof toastProps.autoClose === "number"

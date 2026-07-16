@@ -1,4 +1,4 @@
-.warning-contents {
+.contents {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -7,21 +7,21 @@
   gap: var(--space-3);
 }
 
-.warning-icon-text-group {
+.icon-text-group {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: var(--space-3);
 }
 
-.warning-icon {
+.icon {
   flex-grow: 0;
   flex-shrink: 0;
   width: 28px;
   height: 28px;
 }
 
-.btn--close {
+.close-btn {
   box-sizing: border-box;
   position: relative;
   flex-grow: 0;
@@ -39,12 +39,12 @@
   z-index: 10;
 }
 
-.close-ring--bg {
+.close-ring-bg {
   fill: transparent;
   stroke: var(--color-border);
 }
 
-.close-ring--fg {
+.close-ring-fg {
   fill: transparent;
   stroke: var(--color-brand-pink);
   stroke-linecap: round;

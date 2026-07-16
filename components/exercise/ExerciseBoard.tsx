@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { CA_COMPONENTS } from "@/lib/ca-data";
 import { DragDropProvider } from "@dnd-kit/react";
 import { ToastContainer, toast } from 'react-toastify';
-import WarningToast from "./WarningToast/WarningToast";
+import StandardToast from "./StandardToast/StandardToast";
 import { MdOutlineWarning } from "react-icons/md";
 
 export default function ExerciseBoard() {
@@ -40,7 +40,7 @@ export default function ExerciseBoard() {
       setScore(Object.entries(isFilled).filter((componentDroppable) => (componentDroppable[0] == componentDroppable[1])).length);
       setIsVerified(true);
     } else {
-      toast(WarningToast, {
+      toast(StandardToast, {
         data: {
           // custom props
           Icon: MdOutlineWarning,

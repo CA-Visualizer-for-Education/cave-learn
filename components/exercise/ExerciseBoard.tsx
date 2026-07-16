@@ -10,7 +10,7 @@ import { CA_COMPONENTS } from "@/lib/ca-data";
 import { DragDropProvider } from "@dnd-kit/react";
 import { ToastContainer, toast } from 'react-toastify';
 import WarningToast from "./WarningToast/WarningToast";
-import { MdOutlineInfo, MdOutlineWarning } from "react-icons/md";
+import { MdOutlineWarning } from "react-icons/md";
 
 export default function ExerciseBoard() {
   /* These state variables indicate where each draggable is and what each droppable is filled with */
@@ -43,13 +43,9 @@ export default function ExerciseBoard() {
       toast(WarningToast, {
         data: {
           // custom props
-          // Icon: MdOutlineInfo,
-          // iconColor: "var(--color-brand-blue)",
           Icon: MdOutlineWarning,
           iconColor: "var(--color-warn)",
-          // text: "w",
           text: "Complete the diagram before checking your work",
-          // text: "Some reaaaalllllyyyyyy looooooonnnnnnnggggg textttttttttt words words words words words words words words words words words words words",
         },
         toastId: "incomplete-diagram-warning", // prevents duplicate toasts
         closeButton: false,

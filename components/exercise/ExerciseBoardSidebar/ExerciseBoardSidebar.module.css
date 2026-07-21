@@ -159,6 +159,16 @@
     justify-content: center;
 }
 
+.btn--check-work--incomplete-diagram {
+    opacity: 0.5;
+}
+
+
+.btn--check-work--incomplete-diagram:hover {
+    opacity: 0.5;
+}
+
+
 .btn--reset {
     font-size: clamp(.25rem, .75vw, .7rem);
 }

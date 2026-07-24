@@ -8,6 +8,8 @@ import WireLayer from './Wire/WireLayer'
 import { CA_COMPONENTS, CA_LAYERS } from '@/lib/ca-data'
 
 type Point = { x: number; y: number };
+type Side = 'component' | 'description';
+type Anchor = { side: Side; id: string };
 
 function findColor(componentId: string) {
   const component = CA_COMPONENTS.find(c => c.id === componentId);
@@ -30,69 +32,76 @@ function toPoints(wires: Array<{ componentId: string; descriptionId: string; }>)
   return points;
 }
 
-function findPoint(element: HTMLElement): {x: number, y: number} {
+function findPoint(element: Element): Point {
   const rect = element.getBoundingClientRect();
   const y = rect.top + rect.height / 2 - 4; // 4 is half of the margin difference within the /ComponentPiece due to droppable
-  return element.dataset.side === 'component' ? {x: rect.right - 1, y} : {x: rect.left + 1, y};
+  return element.getAttribute('data-side') === 'component' ? {x: rect.right - 1, y} : {x: rect.left + 1, y};
+}
+
+function findSnapTarget(point: Point, origin: Anchor | null): Element | null {
+  if (!origin) return null;
+  const element = document.elementFromPoint(point.x, point.y)?.closest('[data-side]');
+  if (!element) return null;
+  return element;
+}
+
+function findAnchor(element: Element | null | undefined): Anchor | null {
+  const side = element?.getAttribute('data-side');
+  const id = element?.getAttribute('data-id');
+  if (!id || (side !== 'component' && side !== 'description')) return null;
+  return { side, id };
 }
 
 export default function MatchingExerciseBoard() {
   const [isVerified] = useState(false);
   const [wires, setWires] = useState<Array<{ componentId: string; descriptionId: string; }>>([]);
   const [currentWire, setCurrentWire] = useState<{ startPoint: Point; endPoint: Point; color: string } | null>(null);
-  const [dragState, setDragState] = useState<boolean>(false);
+  const [dragOrigin, setDragOrigin] = useState<Anchor | null>(null);
 
   const handlePointerDown = (event: PointerEvent<HTMLElement>): void => {
+      const element = (event.target as HTMLElement).closest('[data-side]');
+      const origin = findAnchor(element);
+      if (!element || !origin) return;
       event.preventDefault();
-      const element = (event.target as HTMLElement).closest('[data-side]')
-      if (!element) return;
-      setDragState(true);
-      const side = element.getAttribute('data-side');
-      setCurrentWire({ 
-          startPoint: { ...findPoint(element as HTMLElement) }, 
-          endPoint: { x: event.clientX, y: event.clientY }, 
-          color: findColor(side === 'component' ? (element.getAttribute('data-id') ?? "") : "")
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setDragOrigin(origin);
+      setCurrentWire({
+          startPoint: findPoint(element),
+          endPoint: { x: event.clientX, y: event.clientY },
+          color: findColor(origin.side === 'component' ? origin.id : "")
         });
   }
 
   const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
+      if (!dragOrigin) return;
       event.preventDefault();
-      if (dragState) {
-          setCurrentWire(prev => prev ? { ...prev, endPoint: { x: event.clientX, y: event.clientY } } : null);
-      }
+      const cursor = { x: event.clientX, y: event.clientY };
+      const target = findSnapTarget(cursor, dragOrigin);
+      const endPoint = target ? findPoint(target) : cursor;
+      setCurrentWire(prev => prev ? { ...prev, endPoint } : null);
   }
 
   const handlePointerUp = (event: PointerEvent<HTMLElement>) => {
-      const secondElement = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-side]');
-      if (secondElement) {
-          const firstElement = document.elementFromPoint(currentWire?.startPoint.x || 0, currentWire?.startPoint.y || 0)?.closest('[data-side]');
-          const firstSide = firstElement?.getAttribute('data-side');
-          const secondSide = secondElement.getAttribute('data-side');
-          if (firstElement && firstSide !== secondSide) {
-            if (firstSide === 'component' && secondSide === 'description') {
-              const componentId = firstElement.getAttribute('data-id') ?? "";
-              const descriptionId = secondElement.getAttribute('data-id') ?? "";
-              setWires([
-                  ...wires.filter(w => w.componentId !== componentId && w.descriptionId !== descriptionId),
-                  { componentId, descriptionId }
-              ]);
-            } else {
-              const componentId = secondElement.getAttribute('data-id') ?? "";
-              const descriptionId = firstElement.getAttribute('data-id') ?? "";
-              setWires([
-                  ...wires.filter(w => w.componentId !== componentId && w.descriptionId !== descriptionId),
-                  { componentId, descriptionId }
-              ]);
-            }
-          }
+      const target = findAnchor(findSnapTarget({ x: event.clientX, y: event.clientY }, dragOrigin));
+      if (dragOrigin && target) {
+          const componentId = dragOrigin.side === 'component' ? dragOrigin.id : target.id;
+          const descriptionId = dragOrigin.side === 'component' ? target.id : dragOrigin.id;
+          setWires(prev => [
+              ...prev.filter(w => w.componentId !== componentId && w.descriptionId !== descriptionId),
+              { componentId, descriptionId }
+          ]);
       }
-      setDragState(false);
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+      setDragOrigin(null);
       setCurrentWire(null);
   }
 
   return (
     <>
-      <div style={{ display: 'flex', flex: 1, height: '100%' }} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp}>
+      {/* touchAction: 'none' stops a touch drag from being stolen by the scroller mid-wire. */}
+      <div style={{ display: 'flex', flex: 1, height: '100%', touchAction: 'none' }} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', flex: 1 }}>
           <ComponentSide isVerified={isVerified} />
         </Box>

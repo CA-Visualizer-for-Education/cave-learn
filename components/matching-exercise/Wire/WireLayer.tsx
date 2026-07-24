@@ -4,53 +4,27 @@
 // as a <line> child. A single always-mounted <svg> means the pointer handlers exist
 // before any wire does.
 import Wire from './Wire';
+// TODO: `useState` is unused, and `PointerEvent` only serves the dead handler props below — remove both.
 import { useState, type PointerEvent } from 'react';
 
 type Point = { x: number; y: number };
 
 interface WireLayerProps {
-    wires: Array<{ startPoint: Point; endPoint: Point; colour: string }>;
+    wires: Array<{ startPoint: Point; endPoint: Point; color: string }>;
+    currentWire: {startPoint: Point; endPoint: Point; color: string } | null;
 }
 
-export default function WireLayer({ wires }: WireLayerProps) {
-    // startPoint === null means "no drag in progress"; a non-null value is the drag origin.
-    const [startPoint, setStartPoint] = useState<Point | null>(null);
-    const [endPoint, setEndPoint] = useState<Point>({ x: 0, y: 0 });
-    const [dragState, setDragState] = useState<boolean>(false);
-
-    const handlePointerDown = (event: PointerEvent<SVGSVGElement>): void => {
-        console.log("down dog");
-        event.preventDefault();
-        setDragState(true);
-        setStartPoint({ x: event.clientX, y: event.clientY });
-        setEndPoint({ x: event.clientX, y: event.clientY });
-    }
-
-    const handlePointerMove = (event: PointerEvent<SVGSVGElement>) => {
-        event.preventDefault();
-        if (dragState) {
-            setEndPoint({ x: event.clientX, y: event.clientY });
-        }
-    }
-
-    const handlePointerUp = () => {
-        setDragState(false);
-    }
-
+export default function WireLayer({ wires, currentWire }: WireLayerProps) {
     return (
         <svg
             width="100%"
             height="100%"
-            style={{ position: 'fixed', top: 0, left: 0 }}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-        >
+            style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: -1 }}>
             {wires.map((wire, index) => (
-                <Wire key={index} startPoint={wire.startPoint} endPoint={wire.endPoint} colour={wire.colour} />
+                <Wire key={index} startPoint={wire.startPoint} endPoint={wire.endPoint} color={wire.color} />
             ))}
-            {startPoint !== null && (
-                <Wire startPoint={startPoint} endPoint={endPoint} colour="blue" />
+            {currentWire && (
+                <Wire startPoint={currentWire.startPoint} endPoint={currentWire.endPoint} color={currentWire.color} />
             )}
         </svg>
     );

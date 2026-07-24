@@ -13,12 +13,14 @@ export default function DescriptionSide({ isVerified }: DescriptionSideProps) {
   return ( <>
     <div className={styles['button--column']}>
       {CA_COMPONENTS.map((component) => ( <>
+        {/* TODO(exercise): descriptions render in component order → matches line up trivially. Shuffle CA_COMPONENTS for this column to make it a real puzzle. */}
+        <div data-side="description" data-id={component.id}>
           <DescriptionComponentPiece
             label={component.id}
             buttonOutline="outline"
             isVerified={isVerified}
           />
-          <div data-side="description" data-id={component.id} className={`${styles['piece--row']}`}></div>
+        </div>
       </> ))}
     </div>
     </>

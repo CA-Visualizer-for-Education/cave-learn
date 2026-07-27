@@ -1,0 +1,79 @@
+.sidebar {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+  padding: var(--space-8) var(--space-6);
+  flex-shrink: 1;
+}
+
+.sidebarEmpty {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background-color: var(--color-surface2);
+}
+
+.layerBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+  margin-top: var(--space-4);
+}
+
+.layerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.layerName {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.componentName {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+  margin-bottom: var(--space-8);
+}
+
+.useSection {
+  border-left: 2.5px solid var(--layer-color);
+  padding-left: var(--space-4);
+  margin-bottom: var(--space-12);
+}
+
+.useLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 300;
+  color: var(--color-text-mute);
+  margin-bottom: var(--space-2);
+}
+
+.useDescription {
+  font-family: var(--font-display);
+  font-size: 1.275rem;
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+}
+
+.dependencyList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+  min-width: 0;
+}

@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@dnd-kit/react": "^0.4.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.1",
@@ -36,6 +37,10 @@
   "contributors": [
     "Masa Abu Arja",
     "Matthew Dahlgren",
-    "Seokjin Yoo"
+    "Olivier Denis",
+    "Seokjin Yoo",
+    "Eric Xu",
+    "Annie Wang",
+    "Jayden Ong"
   ]
 }

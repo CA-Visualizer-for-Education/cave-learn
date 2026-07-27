@@ -60,14 +60,18 @@ app/
   exercise/page.tsx    ← exercise page (/exercise)
 
 components/
-  layout/Navbar.tsx              ← shared top nav bar
-  home/HeroSection.tsx           ← home page hero block
-  home/StepCard.tsx              ← reusable lesson step card
-  diagram/CADiagram.tsx          ← interactive CA diagram canvas
-  diagram/DiagramLegend.tsx      ← legend below the diagram
-  diagram/ComponentSidebar.tsx   ← right panel showing clicked component info
-  exercise/ExerciseBoard.tsx     ← drag-and-drop diagram board
-  exercise/ComponentPieces.tsx   ← draggable chip pieces panel
+  layout/Navbar.tsx                                                           ← shared top nav bar
+  home/HeroSection.tsx                                                        ← home page hero block
+  home/StepCard.tsx                                                           ← reusable lesson step card
+  diagram/CADiagram.tsx                                                       ← interactive CA diagram canvas
+  diagram/DiagramLegend.tsx                                                   ← legend below the diagram
+  diagram/ComponentSidebar.tsx                                                ← right panel showing clicked component info
+  exercise/ExerciseBoard.tsx                                                  ← drag-and-drop diagram board
+  exercise/ComponentPieces/ComponentPieces.tsx                                ← draggable chip pieces panel
+  exercise/ComponentPiecesDroppableArea/ComponentPiecesDroppableArea.tsx      ← droppable area for chip pieces
+  exercise/ComponentBoard/ComponentBoard.tsx                                  ← image of the CA Diagram and where droppable areas are located
+  exercise/ExerciseBoardSidebar/ExerciseBoardSidebar.tsx                      ← location of draggable chips and status
+  exercise/ExerciseBoardSubheader/ExerciseBoardSubheader.tsx                  ← location of page title
 
 lib/
   ca-data.ts           ← all CA layers + component data (import from here, never hardcode)

@@ -1,0 +1,86 @@
+.droppable {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+}
+
+.controller-droppable {
+    margin-top: 110px;
+    width: 156px;
+    height: 50px;
+}
+
+.presenter-droppable {
+    margin-top: 50px;
+    width: 156px;
+    height: 50px;
+}
+
+.view-model-droppable {
+    margin-top: 64px;
+    width: 156px;
+    height: 50px;
+}
+
+.input-data-droppable {
+    margin-top: 90px;
+    width: 152px;
+    height: 39px;
+}
+
+.input-boundary-droppable {
+    margin-top: 25px;
+    width: 152px;
+    height: 39px;
+}
+
+.output-boundary-droppable {
+    margin-top: 32px;
+    width: 152px;
+    height: 39px; 
+}
+
+.output-data-droppable {
+    margin-top: 30px; 
+    width: 152px;
+    height: 39px;
+}
+
+.use-case-interactor-droppable {
+    margin-top: 5px;
+    height: 42px;
+    width: 146px;
+}
+
+.entities-droppable {
+    margin-top: 118px;
+    margin-left: 59px;
+    width: 152px;
+    height: 39px;
+}
+
+.data-access-interface-droppable {
+    margin-top: 148.5px;
+    margin-left: 62px;
+    height: 36px;
+    width: 156px;
+}
+
+.view-droppable {
+    margin-left: 60px;
+    width: 157px;
+    height: 65px;
+}
+
+.data-access-droppable {
+    margin-left: 261px;
+    width: 146px;
+    height: 65px;
+}
+
+.database-droppable {
+    margin-left: 55px;
+    width: 145px;
+    height: 65px;
+}

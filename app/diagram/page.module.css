@@ -1,0 +1,26 @@
+.leftCol {
+  flex: 1;
+  min-width: 0;          /* ← lets it shrink below its content size */
+  padding-left: var(--space-6);
+  padding-right: var(--space-6);
+  overflow: hidden;
+}
+
+.eyebrow {
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-2);
+}
+
+.heading {
+  margin-bottom: var(--space-6);
+}
+
+.diagramWrap {
+  padding: var(--space-6) var(--space-6) 0;
+}
+
+.legend {
+  height: 90px;
+  width: auto;
+  margin-bottom: var(--space-4);
+}

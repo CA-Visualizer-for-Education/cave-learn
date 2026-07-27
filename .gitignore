@@ -1,4 +1,6 @@
 .next/
+out/
 node_modules/
 .env*.local
 .DS_Store
+.idea/

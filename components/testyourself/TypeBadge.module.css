@@ -1,0 +1,15 @@
+.typeBadge{
+    height: 18px;
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-right: 15px;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    --background-blue: #DDECF8;
+    --background-pink: #E2477C59;
+    --background-green: #3FAE5C59;
+    --background-yellow: #F5C24273;
+    --badge-text-yellow: #C99A14;
+}

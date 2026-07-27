@@ -1,0 +1,34 @@
+.activityCard{
+    border-radius: 22px;
+    margin-bottom: 56px;
+    height: 150px;
+    border: 1px solid #E6DFD5;
+    display: flex;
+    gap: 90px;
+}
+
+@media (max-width: 768px) {
+    .activityCard{
+        width: 768px;
+    }
+}
+
+.placeholderCard{
+    background-color: #E6DFD5;
+}
+
+.filledCard{
+    background-color: #FFFFFF;
+    padding: 25px 70px
+}
+
+.cardFrame{
+    flex: 1;
+    border-radius: 14px;
+}
+
+.cardImage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

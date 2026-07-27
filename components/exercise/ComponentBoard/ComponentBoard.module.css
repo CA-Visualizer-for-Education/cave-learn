@@ -1,0 +1,78 @@
+.cadiagram {
+    height: calc(100% - 80px);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cadiagram-sub-container {
+    width: 98%;
+    height: 98%;
+    border-radius: var(--radius-sm);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.diagram-container {
+    width: 894px;
+    height: 513px;
+    background-image: url('diagram.svg');
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.top-half {
+    display: flex;
+    flex-direction: row;
+}
+
+.interface-adapters-container {
+    width: 278px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.application-business-rules-container {
+    width: 170px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.use-case-interactor-container {
+    width: 160px;
+    margin-top: 178px;
+    margin-left: 2px;
+}
+
+.entities-dai-container {
+    flex-grow: 1
+}
+
+.frameworks-drivers-container {
+    margin-top: 69px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.legend-container {
+    width: 100%;
+    height: 60px;
+    pointer-events: none;
+    background-image: url('Legend.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}

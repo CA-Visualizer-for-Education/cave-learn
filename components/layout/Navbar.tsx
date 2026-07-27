@@ -74,6 +74,41 @@ function FeedbackButton() {
 
 export default function Navbar() {
   const pathname = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [menuOpen])
+
+  const navLinks = NAV_ITEMS.map(({ href, label, ...item }) => {
+    const isActive = isNavItemActive(
+      href,
+      'exact' in item ? item.exact : false,
+      'matchDiagram' in item ? item.matchDiagram : false,
+      pathname,
+    )
+
+    return (
+      <Link
+        key={href}
+        href={href}
+        className={`${styles.link} ${isActive ? styles.linkActive : ''}`}
+        onClick={() => setMenuOpen(false)}
+      >
+        {label}
+      </Link>
+    )
+  })
 
   return (
     <nav className={styles.navbar} aria-label="Main navigation">
@@ -83,25 +118,39 @@ export default function Navbar() {
         <span className={`badge badge--pink ${styles.learnBadge}`}>LEARN</span>
       </Link>
 
-      <div className={styles.links}>
-        {NAV_ITEMS.map(({ href, label, ...item }) => {
-          const isActive = isNavItemActive(
-            href,
-            'exact' in item ? item.exact : false,
-            'matchDiagram' in item ? item.matchDiagram : false,
-            pathname,
-          )
-          return (
-            <Link key={href} href={href} className={`${styles.link} ${isActive ? styles.linkActive : ''}`}>
-              {label}
-            </Link>
-          )
-        })}
-      </div>
+      <div className={styles.links}>{navLinks}</div>
 
-      <div className={styles.navRight}>
-        <FeedbackButton />
-      </div>
+      <button
+        type="button"
+        className={styles.menuButton}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={menuOpen}
+        aria-controls="navbar-menu"
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        <span
+          className={`${styles.menuIcon} ${menuOpen ? styles.menuIconOpen : ''}`}
+          aria-hidden
+        >
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
+
+      {menuOpen && (
+        <>
+          <button
+            type="button"
+            className={styles.backdrop}
+            aria-label="Close menu"
+            onClick={() => setMenuOpen(false)}
+          />
+          <div id="navbar-menu" className={styles.menuPanel}>
+            {navLinks}
+          </div>
+        </>
+      )}
     </nav>
   )
 }

@@ -27,19 +27,16 @@ export const ActivityCard = ({ exercise }: { exercise: string }) => {
     const content = designs[exercise.toUpperCase() as Exercise];
 
     return (
-        <Link href={content.link}>
+        <Link href={content.link} className={styles.cardLink}>
         <article className={`${styles.activityCard} ${styles.filledCard}`}>
             <div className={styles.cardFrame}>
                 <TypeBadge type={content.type} />
-                <h2 style={{ marginBottom: "var(--space-2)", marginTop: "var(--space-2)" }}
-                    className="text-h2"
-                >
+                <h2 className={`text-h2 ${styles.cardTitle}`}>
                     {content.title}
                 </h2>
                 <p className="text-body">{content.content}</p>
             </div>
-            <div style={{ backgroundColor: "#DDECF8"}}
-            className={`${styles.cardFrame} ${styles.cardImage}`}>
+            <div className={`${styles.cardFrame} ${styles.cardImage}`}>
                 <img src={asset(content.graphic)} alt={`${content.type} icon`} />
             </div>
         </article>

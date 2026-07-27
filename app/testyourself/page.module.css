@@ -1,0 +1,29 @@
+.intro {
+  padding: var(--space-8) var(--space-10);
+}
+
+.description {
+  max-width: 70%;
+  margin-bottom: var(--space-6);
+}
+
+.typeBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 640px) {
+  .intro {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .description {
+    max-width: 100%;
+  }
+}

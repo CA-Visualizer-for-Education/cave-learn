@@ -1,18 +1,19 @@
 "use client";
 // components/exercise/ExerciseBoardSidebar/ExerciseBoardSidebar.tsx
 // The sidebar of the exercise page.
-import ComponentPieces from "../ComponentPieces/ComponentPieces";
+import { ComponentPieces } from "../ComponentPieces/ComponentPieces";
 import { CA_COMPONENTS } from "@/lib/ca-data";
 import styles from "./ExerciseBoardSidebar.module.css";
 import { useDroppable } from "@dnd-kit/react";
 
 /*
-isPlaced: A mapping of draggable button ids to the id of the droppable area they are located in.
-isVerified: Whether or not the current board has been verified (check work has been clicked).
-score: The amount of draggable buttons in the correct droppable areas.
-handleReset: Resets the position of all of the draggable pieces after the board has been verified.
-handleRetry: Reset the position of all of the draggable pieces.
-handleCheckWork: Shows the score and triggers a change in the sidebar.
+  isPlaced maps button ids -> droppable area ids
+    - shows the area each button is in
+  isVerified: Whether or not the current board has been verified (check work has been clicked).
+  score: The amount of draggable buttons in the correct droppable areas.
+  handleReset: Resets the position of all of the draggable pieces after the board has been verified.
+  handleRetry: Reset the position of all of the draggable pieces.
+  handleCheckWork: Shows the score and triggers a change in the sidebar.
 */
 interface ExerciseBoardSidebarProps {
   isPlaced: Record<string, string>;
@@ -106,11 +107,10 @@ export default function ExerciseBoardSidebar({
                   index % 2 == 0 && (
                     <ComponentPieces
                       key={component.id}
-                      layer={component.layer}
                       label={component.id}
-                      inDroppable={false}
-                      isVerified={isVerified}
-                      buttonOutline={""}
+                      layer={component.layer}
+                      currentLayer={""}
+                      verificationStatus={"verified-incorrect"}
                     />
                   ),
               )}
@@ -123,11 +123,10 @@ export default function ExerciseBoardSidebar({
                   index % 2 == 1 && (
                     <ComponentPieces
                       key={component.id}
-                      layer={component.layer}
                       label={component.id}
-                      inDroppable={false}
-                      isVerified={isVerified}
-                      buttonOutline={""}
+                      layer={component.layer}
+                      currentLayer={""}
+                      verificationStatus={"verified-incorrect"}
                     />
                   ),
               )}
@@ -166,11 +165,10 @@ export default function ExerciseBoardSidebar({
                   index % 2 == 0 && (
                     <ComponentPieces
                       key={component.id}
-                      layer={component.layer}
                       label={component.id}
-                      inDroppable={false}
-                      isVerified={isVerified}
-                      buttonOutline={""}
+                      layer={component.layer}
+                      currentLayer={isPlaced[component.id]}
+                      verificationStatus={"unverified"}
                     />
                   ),
               )}
@@ -183,11 +181,10 @@ export default function ExerciseBoardSidebar({
                   index % 2 == 1 && (
                     <ComponentPieces
                       key={component.id}
-                      layer={component.layer}
                       label={component.id}
-                      inDroppable={false}
-                      isVerified={isVerified}
-                      buttonOutline={""}
+                      layer={component.layer}
+                      currentLayer={isPlaced[component.id]}
+                      verificationStatus={"unverified"}
                     />
                   ),
               )}

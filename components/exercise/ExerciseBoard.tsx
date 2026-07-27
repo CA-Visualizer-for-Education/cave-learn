@@ -13,13 +13,22 @@ import StandardToast from "./StandardToast/StandardToast";
 import { MdOutlineWarning } from "react-icons/md";
 
 export default function ExerciseBoard() {
-  /* These state variables indicate where each draggable is and what each droppable is filled with */
+  /*
+    These state variables indicate where each draggable is and 
+    what each droppable is filled with.
+
+    isPlaced maps button ids -> droppable area ids
+      - shows the area each button is in
+    isFilled maps droppable area ids -> button ids
+      - shows which button each area contains
+  */
   const [isPlaced, setIsPlaced] = useState(
     Object.fromEntries(CA_COMPONENTS.map((component, _) => [component.id, ""])),
   );
   const [isFilled, setIsFilled] = useState(
     Object.fromEntries(CA_COMPONENTS.map((component, _) => [component.id, ""])),
   );
+
   const [score, setScore] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
 
@@ -92,10 +101,10 @@ export default function ExerciseBoard() {
 
           if (event.operation.target?.id == "sidebar-droppable") {
             if (isPlaced[event.operation.source?.id as string] == "") {
-              // console.log("Placed it in sidebar, but it was already in sidebar.")
+              // console.log("Placed it in sidebar, but it was already in sidebar.");
               return;
             } else {
-              // console.log("Placed it in sidebar, from a droppable.")
+              // console.log("Placed it in sidebar, from a droppable.");
               setIsFilled({
                 ...isFilled,
                 [isPlaced[event.operation.source?.id as string] as string]: "",
@@ -111,20 +120,20 @@ export default function ExerciseBoard() {
               isPlaced[event.operation.source?.id as string] ==
                 event.operation.target?.id
             ) {
-              // console.log("The button was in component, and dropped into same component.")
+              // console.log("The button was in component, and dropped into same component.",);
               return;
             }
 
             if (isPlaced[event.operation.source?.id as string] == "") {
               if (isFilled[event.operation.target?.id as string] == "") {
-                // console.log("The button was in sidebar and dropped into empty component.")
+                // console.log( "The button was in sidebar and dropped into empty component.");
                 setIsPlaced({
                   ...isPlaced,
                   [event.operation.source?.id as string]: event.operation.target
                     ?.id as string,
                 });
               } else {
-                // console.log("The button was placed from sidebar into component that already had a button.")
+                // console.log( "The button was placed from sidebar into component that already had a button.");
                 const oldDraggable =
                   isFilled[event.operation.target?.id as string];
                 setIsPlaced({
@@ -143,7 +152,7 @@ export default function ExerciseBoard() {
               const oldDroppable =
                 isPlaced[event.operation.source?.id as string];
               if (isFilled[event.operation.target?.id as string] == "") {
-                // console.log("The button was in component and placed into empty component.")
+                // console.log( "The button was in component and placed into empty component.");
                 setIsFilled({
                   ...isFilled,
                   [oldDroppable]: "",
@@ -156,7 +165,7 @@ export default function ExerciseBoard() {
                     ?.id as string,
                 });
               } else {
-                // console.log("The button was placed in component that already had a button, had to swap.")
+                // console.log( "The button was placed in component that already had a button, had to swap.");
                 const oldDraggable =
                   isFilled[event.operation.target?.id as string];
                 setIsFilled({
@@ -186,7 +195,11 @@ export default function ExerciseBoard() {
           }}
         >
           <ExerciseBoardSubheader />
-          <ComponentBoard isFilled={isFilled} isVerified={isVerified} />
+          <ComponentBoard
+            isPlaced={isPlaced}
+            isFilled={isFilled}
+            isVerified={isVerified}
+          />
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
           <ExerciseBoardSidebar

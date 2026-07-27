@@ -5,21 +5,6 @@ import { type LayerId } from "@/lib/ca-data";
 import styles from "./ComponentPieces.module.css";
 import { useDraggable } from "@dnd-kit/react";
 
-/*
-label: Represents what component of clean architecture the button represents and is used as its id.
-layer: Represents what layer of clean architecture the button represents.
-inDroppable: Is true if the button is to be placed in a droppable area.
-buttonOutline: Is either "button--correct" if the button is in the right droppable area or "button-incorrect" otherwise.
-isVerified: Whether or not the current board has been verified (check work has been clicked).
-*/
-interface ComponentPiecesProps {
-  label: string;
-  layer: string;
-  inDroppable: boolean;
-  buttonOutline: string;
-  isVerified: boolean;
-}
-
 const capitalizeWords = (words: string): string => {
   const wordsSplit = words.split("-");
   let newLabel: string = "";
@@ -53,62 +38,102 @@ const layerToBadge: Record<LayerId, string> = {
   "frameworks-drivers": "badge badge--blue",
 };
 
-export default function ComponentPieces({
+type PieceLocation = "sidebar" | "diagram";
+
+export type VerificationStatus =
+  | "unverified"
+  | "verified-correct"
+  | "verified-incorrect";
+
+/*
+  label: The component of clean architecture the button represents
+    - is also used as its id
+  layer: The layer of clean architecture the button represents
+  currentLayer: The droppable CA layer the button is currently in
+    - is an empty string if the button is not in a droppable
+  verificationStatus: Status of the component within the board (controls styling)
+*/
+interface ComponentPiecesProps {
+  label: string;
+  layer: string;
+  currentLayer: string;
+  verificationStatus: VerificationStatus;
+}
+
+export function ComponentPieces({
   label,
   layer,
-  inDroppable,
-  buttonOutline,
-  isVerified,
+  currentLayer,
+  verificationStatus,
 }: ComponentPiecesProps) {
-  // const {ref} = useDraggable({ id: label }) is removed from here to prevent unnecessary ids from being created if a button is not draggable
-
   /* If the button is in droppable, we need to move the entire button up the height equivalent to the height of the sublabel. 
      If isVerified, we don't care what inDroppable is since it is assumed that only components are in the droppable.
   */
-  return isVerified ? (
+
+  const isVerified =
+    verificationStatus === "verified-correct" ||
+    verificationStatus === "verified-incorrect";
+
+  const location: PieceLocation = currentLayer === "" ? "sidebar" : "diagram";
+  const subLabel = getSubLabel(label);
+
+  const badgeClass =
+    location === "diagram"
+      ? layerToBadge[currentLayer as LayerId]
+      : "badge badge--neutral";
+
+  const buttonOutline = (() => {
+    if (location === "sidebar") {
+      return "button--neutral";
+    }
+    switch (verificationStatus) {
+      case "unverified":
+        return ""; // no border
+      case "verified-correct":
+        return "button--correct";
+      case "verified-incorrect":
+        return "button--incorrect";
+      default:
+        // did not handle a valid verificationStatus
+        // create a compile-time error
+        const exhaustiveCheck: never = verificationStatus;
+
+        // runtime error
+        throw new Error(`Unhandled verification status: ${exhaustiveCheck}`);
+    }
+  })();
+
+  const { ref } = useDraggable({ id: label });
+
+  const mainLabelClasses = [
+    badgeClass,
+    styles["exercise--button"],
+    styles["button--main-label"],
+    styles[buttonOutline],
+    location === "diagram" && styles["exercise--button-in-droppable"],
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const containerClasses = [
+    styles["individual-button--container"],
+    location === "diagram" && styles["button--in-droppable"],
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
     <button
       type="button"
-      className={`${styles["individual-button--container"]} ${styles["button--in-droppable"]}`}
+      className={containerClasses}
+      ref={isVerified ? undefined : ref}
     >
-      {getSubLabel(label) != "" ? (
-        <div className={styles["button--sublabel"]}>{getSubLabel(label)}</div>
+      {subLabel !== "" ? (
+        <div className={styles["button--sublabel"]}>{subLabel}</div>
       ) : (
         <div className={styles["button--no-sublabel"]}></div>
       )}
-      <div
-        className={
-          inDroppable
-            ? `${layerToBadge[layer as LayerId]} ${styles["exercise--button"]} ${styles["button--main-label"]} ${styles["exercise--button-in-droppable"]} ${styles[buttonOutline]}`
-            : `${layerToBadge[layer as LayerId]} ${styles["exercise--button"]} ${styles["button--main-label"]}`
-        }
-      >
-        {capitalizeWords(label)}
-      </div>
-    </button>
-  ) : (
-    <button
-      type="button"
-      className={
-        inDroppable
-          ? `${styles["individual-button--container"]} ${styles["button--in-droppable"]}`
-          : styles["individual-button--container"]
-      }
-      ref={useDraggable({ id: label }).ref}
-    >
-      {getSubLabel(label) != "" ? (
-        <div className={styles["button--sublabel"]}>{getSubLabel(label)}</div>
-      ) : (
-        <div className={styles["button--no-sublabel"]}></div>
-      )}
-      <div
-        className={
-          inDroppable
-            ? `${layerToBadge[layer as LayerId]} ${styles["exercise--button"]} ${styles["button--main-label"]} ${styles["exercise--button-in-droppable"]}`
-            : `${layerToBadge[layer as LayerId]} ${styles["exercise--button"]} ${styles["button--main-label"]}`
-        }
-      >
-        {capitalizeWords(label)}
-      </div>
+      <div className={mainLabelClasses}>{capitalizeWords(label)}</div>
     </button>
   );
 }

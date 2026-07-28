@@ -3,7 +3,8 @@
     "compilerOptions": {
         "rootDir": ".",
         "noEmit": true,
+        "jsx": "react-jsx",
         "types": ["node", "@types/jest"]
     },
-    "include": ["src/**/*", "__tests__/**/*"]
+    "include": ["**/*.ts", "**/*.tsx", "__tests__/**/*"]
 }

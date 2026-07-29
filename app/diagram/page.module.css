@@ -49,7 +49,7 @@
   flex-shrink: 0;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 900px) {
   .container {
     flex-direction: row;
     align-items: stretch;

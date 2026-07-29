@@ -78,7 +78,7 @@
   min-width: 0;
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 900px) {
   .sidebar {
     height: auto;
     min-height: 0;

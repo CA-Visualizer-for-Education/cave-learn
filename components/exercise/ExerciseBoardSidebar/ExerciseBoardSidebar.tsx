@@ -99,38 +99,17 @@ export default function ExerciseBoardSidebar({
             )}
           </div>
           <div className={styles["sidebar--incorrect-components"]}>
-            <div className={styles["button--column"]}>
-              {CA_COMPONENTS.filter(
-                (component) => isPlaced[component.id] != component.id,
-              ).map(
-                (component, index) =>
-                  index % 2 == 0 && (
-                    <ComponentPieces
-                      key={component.id}
-                      label={component.id}
-                      layer={component.layer}
-                      currentLayer={""}
-                      verificationStatus={"verified-incorrect"}
-                    />
-                  ),
-              )}
-            </div>
-            <div className={styles["button--column"]}>
-              {CA_COMPONENTS.filter(
-                (component) => isPlaced[component.id] != component.id,
-              ).map(
-                (component, index) =>
-                  index % 2 == 1 && (
-                    <ComponentPieces
-                      key={component.id}
-                      label={component.id}
-                      layer={component.layer}
-                      currentLayer={""}
-                      verificationStatus={"verified-incorrect"}
-                    />
-                  ),
-              )}
-            </div>
+            {CA_COMPONENTS.filter(
+              (component) => isPlaced[component.id] != component.id,
+            ).map((component) => (
+              <ComponentPieces
+                key={component.id}
+                label={component.id}
+                layer={component.layer}
+                currentLayer={""}
+                verificationStatus={"verified-incorrect"}
+              />
+            ))}
           </div>
           <div className={styles["retry-button--container"]}>
             <button
@@ -157,38 +136,17 @@ export default function ExerciseBoardSidebar({
             className={styles["buttons--container"]}
             ref={useDroppable({ id: "sidebar-droppable" }).ref}
           >
-            <div className={styles["button--column"]}>
-              {CA_COMPONENTS.filter(
-                (component) => isPlaced[component.id] == "",
-              ).map(
-                (component, index) =>
-                  index % 2 == 0 && (
-                    <ComponentPieces
-                      key={component.id}
-                      label={component.id}
-                      layer={component.layer}
-                      currentLayer={isPlaced[component.id]}
-                      verificationStatus={"unverified"}
-                    />
-                  ),
-              )}
-            </div>
-            <div className={styles["button--column"]}>
-              {CA_COMPONENTS.filter(
-                (component) => isPlaced[component.id] == "",
-              ).map(
-                (component, index) =>
-                  index % 2 == 1 && (
-                    <ComponentPieces
-                      key={component.id}
-                      label={component.id}
-                      layer={component.layer}
-                      currentLayer={isPlaced[component.id]}
-                      verificationStatus={"unverified"}
-                    />
-                  ),
-              )}
-            </div>
+            {CA_COMPONENTS.filter(
+              (component) => isPlaced[component.id] == "",
+            ).map((component) => (
+              <ComponentPieces
+                key={component.id}
+                label={component.id}
+                layer={component.layer}
+                currentLayer={isPlaced[component.id]}
+                verificationStatus={"unverified"}
+              />
+            ))}
           </div>
           <div className={styles["check-work-reset--container"]}>
             <button

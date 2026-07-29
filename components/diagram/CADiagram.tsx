@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { CA_COMPONENTS } from '@/lib/ca-data'
 import { asset } from '@/lib/asset'
 import { DiagramNode } from './DiagramNode'
@@ -11,9 +12,8 @@ interface CADiagramProps {
 }
 
 // Diagram canvas dimensions — must match the SVG viewBox
-const W = 894
-const H = 553
-const SCALE = 1.05
+const CANVAS_WIDTH = 894
+const CANVAS_HEIGHT = 553
 
 // Center (x, y) for each node in the 894x553 coordinate space
 const POSITIONS: Record<string, { x: number; y: number }> = {
@@ -71,58 +71,78 @@ const ARROWS = [
 ]
 
 export default function CADiagram({ selectedId, onSelect }: CADiagramProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const updateScaleToFit = () => {
+      const availableWidth = container.clientWidth
+      const availableHeight = container.clientHeight
+      if (availableWidth > 0 && availableHeight > 0) {
+        setScale(Math.min(availableWidth / CANVAS_WIDTH, availableHeight / CANVAS_HEIGHT))
+      }
+    }
+
+    updateScaleToFit()
+    const resizeObserver = new ResizeObserver(updateScaleToFit)
+    resizeObserver.observe(container)
+    return () => resizeObserver.disconnect()
+  }, [])
+
   return (
-    <div style={{ width: '100%', height: '100%', overflow: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ width: W * SCALE, height: H * SCALE, flexShrink: 0, overflow: 'hidden' }}>
-      <div style={{ position: 'relative', width: W, height: H, transform: `scale(${SCALE})`, transformOrigin: 'top left' }}>
-        {/* SVG background */}
-        <img
-          src={asset('/diagrambackground.svg')}
-          alt=""
-          style={{ position: 'absolute', top: 0, left: 0, width: W, height: H, pointerEvents: 'none' }}
-        />
+    <div
+      ref={containerRef}
+      style={{ width: '100%', height: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    >
+      <div style={{ width: CANVAS_WIDTH * scale, height: CANVAS_HEIGHT * scale, flexShrink: 0, overflow: 'hidden' }}>
+        <div style={{ position: 'relative', width: CANVAS_WIDTH, height: CANVAS_HEIGHT, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
+          <img
+            src={asset('/diagrambackground.svg')}
+            alt=""
+            style={{ position: 'absolute', top: 0, left: 0, width: CANVAS_WIDTH, height: CANVAS_HEIGHT, pointerEvents: 'none' }}
+          />
 
-        {/* Layer labels */}
-        {[
-          { label: 'Interface Adapters',  x: 55,  y: 40,  color: '#236334' },
-          { label: 'Application Business Rules', x: 280, y: 40,  color: '#941B45' },
-          { label: 'Enterprise Business Rules',  x: 640, y: 40,  color: '#8B6A00' },
-          { label: 'Frameworks & Drivers',       x: 265,  y: 458, color: '#1F4E8A' },
-        ].map(({ label, x, y, color }) => (
-          <span key={label} style={{
-            position: 'absolute', left: x, top: y,
-            fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 700,
-            color, pointerEvents: 'none',
-          }}>{label}</span>
-        ))}
+          {[
+            { label: 'Interface Adapters',  x: 55,  y: 40,  color: '#236334' },
+            { label: 'Application Business Rules', x: 280, y: 40,  color: '#941B45' },
+            { label: 'Enterprise Business Rules',  x: 640, y: 40,  color: '#8B6A00' },
+            { label: 'Frameworks & Drivers',       x: 265,  y: 458, color: '#1F4E8A' },
+          ].map(({ label, x, y, color }) => (
+            <span key={label} style={{
+              position: 'absolute', left: x, top: y,
+              fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 700,
+              color, pointerEvents: 'none',
+            }}>{label}</span>
+          ))}
 
-        {/* Arrows */}
-        {ARROWS.map((arrow, i) => (
-          <ManhattanArrow key={i} {...arrow} />
-        ))}
+          {ARROWS.map((arrow, i) => (
+            <ManhattanArrow key={i} {...arrow} />
+          ))}
 
-        {/* Nodes */}
-        {Object.entries(POSITIONS).map(([id, { x, y }]) => {
-          const component = CA_COMPONENTS.find(c => c.id === id)
-          if (!component) return null
-          return (
-            <div
-              key={id}
-              style={{
-                position: 'absolute',
-                left: x - NODE_W / 2 - PAD,
-                top: y - NODE_H / 2 - PAD,
-              }}
-            >
-              <DiagramNode
-                label={component!.name}
-                isSelected={selectedId === id}
-                onClick={() => onSelect(selectedId === id ? null : id)}
-              />
-            </div>
-          )
-        })}
-      </div>
+          {Object.entries(POSITIONS).map(([id, { x, y }]) => {
+            const component = CA_COMPONENTS.find(c => c.id === id)
+            if (!component) return null
+            return (
+              <div
+                key={id}
+                style={{
+                  position: 'absolute',
+                  left: x - NODE_W / 2 - PAD,
+                  top: y - NODE_H / 2 - PAD,
+                }}
+              >
+                <DiagramNode
+                  label={component!.name}
+                  isSelected={selectedId === id}
+                  onClick={() => onSelect(selectedId === id ? null : id)}
+                />
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

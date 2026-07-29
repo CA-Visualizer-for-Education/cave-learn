@@ -17,6 +17,7 @@
 import type { Metadata } from 'next'
 import { Bricolage_Grotesque, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google'
 import Navbar from '@/components/layout/Navbar'
+import AppErrorBoundary from '@/components/layout/AppErrorBoundary'
 import './globals.css'
 
 const bricolage = Bricolage_Grotesque({
@@ -48,8 +49,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${bricolage.variable} ${jakarta.variable} ${jetbrains.variable}`}>
       <body>
-        <Navbar />
-        {children}
+        <AppErrorBoundary>
+          <Navbar />
+          {children}
+        </AppErrorBoundary>
       </body>
     </html>
   )

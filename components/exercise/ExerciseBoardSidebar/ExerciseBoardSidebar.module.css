@@ -142,6 +142,10 @@
     height: 400px;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    justify-content: start;
+    justify-items: stretch;
+    align-content: start;
+    align-items: stretch;
     gap: 0px 10px;
 }
 

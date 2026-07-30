@@ -7,9 +7,10 @@ import styles from './ComponentSide.module.css'
 
 interface ComponentSideProps {
   isVerified: boolean;
+  outlines: Record<string, string>;
 }
 
-export default function ComponentSide({ isVerified }: ComponentSideProps) {
+export default function ComponentSide({ isVerified, outlines }: ComponentSideProps) {
   return ( <>
     <div className={styles['button--column']}>
       {CA_COMPONENTS.map((component) => ( <>
@@ -20,7 +21,7 @@ export default function ComponentSide({ isVerified }: ComponentSideProps) {
             inDroppable={true}
             draggable={false}
             isVerified={isVerified}
-            buttonOutline=""
+            buttonOutline={isVerified ? outlines[component.id] ?? '' : ''}
           />
         </div>
       </> ))}

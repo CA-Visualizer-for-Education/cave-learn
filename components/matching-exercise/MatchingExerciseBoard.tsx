@@ -1,116 +1,74 @@
 'use client'
 
-import { useState, PointerEvent } from 'react'
+import { useState } from 'react'
 import { Box } from '@mui/material'
-import ComponentSide from './ComponentSide/ComponentSide'
-import DescriptionSide from './DescriptionSide/DescriptionSide'
-import WireLayer from './Wire/WireLayer'
-import { CA_COMPONENTS, CA_LAYERS } from '@/lib/ca-data'
+import ExerciseBoardSubheader from './ExerciseBoardSubheader/ExerciseBoardSubheader'
+import ExerciseBoardSidebar from './ExerciseBoardSidebar/ExerciseBoardSidebar'
+import MatchingComponentBoard, { Wire } from './MatchingComponentBoard/MatchingComponentBoard'
+import { CA_COMPONENTS } from '@/lib/ca-data'
 
-type Point = { x: number; y: number };
-type Side = 'component' | 'description';
-type Anchor = { side: Side; id: string };
-
-function findColor(componentId: string) {
-  const component = CA_COMPONENTS.find(c => c.id === componentId);
-  return component ? CA_LAYERS[component.layer].colorHex : '#e6dfd6'; // pearl-brush colour on figma and same fill as descriptions
+// A wire is correct when the component it starts from is the one its description belongs to.
+function isCorrect(wire: Wire): boolean {
+  return wire.componentId === wire.descriptionId;
 }
 
-function toPoints(wires: Array<{ componentId: string; descriptionId: string; }>): Array<{ startPoint: Point; endPoint: Point; color: string }> {
-  const points: Array<{ startPoint: Point; endPoint: Point; color: string }> = [];
-  for (const wire of wires) {
-    const componentElement = document.querySelector(`[data-side="component"][data-id="${wire.componentId}"]`) as HTMLElement | null;
-    const descriptionElement = document.querySelector(`[data-side="description"][data-id="${wire.descriptionId}"]`) as HTMLElement | null;
-    if (componentElement && descriptionElement) {
-      const startPoint = findPoint(componentElement);
-      const endPoint = findPoint(descriptionElement);
-      points.push({ startPoint, endPoint, color: findColor(wire.componentId) });
-    } else {
-      console.warn('wu oh ... could not find elements for wire:', wire);
-    }
-  }
-  return points;
-}
-
-function findPoint(element: Element): Point {
-  const rect = element.getBoundingClientRect();
-  const y = rect.top + rect.height / 2 - 4; // 4 is half of the margin difference within the /ComponentPiece due to droppable
-  return element.getAttribute('data-side') === 'component' ? {x: rect.right - 1, y} : {x: rect.left + 1, y};
-}
-
-function findSnapTarget(point: Point, origin: Anchor | null): Element | null {
-  if (!origin) return null;
-  const element = document.elementFromPoint(point.x, point.y)?.closest('[data-side]');
-  if (!element) return null;
-  return element;
-}
-
-function findAnchor(element: Element | null | undefined): Anchor | null {
-  const side = element?.getAttribute('data-side');
-  const id = element?.getAttribute('data-id');
-  if (!id || (side !== 'component' && side !== 'description')) return null;
-  return { side, id };
+// Per-id outline class for one side of the board. Pieces with no wire attached stay
+// unstyled so "unanswered" never reads as "correct".
+function toOutlines(wires: Wire[], side: 'component' | 'description'): Record<string, string> {
+  return Object.fromEntries(
+    CA_COMPONENTS.map((component) => {
+      const wire = wires.find(w => (side === 'component' ? w.componentId : w.descriptionId) === component.id);
+      if (!wire) return [component.id, ''];
+      return [component.id, isCorrect(wire) ? 'button--correct' : 'button--incorrect'];
+    })
+  );
 }
 
 export default function MatchingExerciseBoard() {
-  const [isVerified] = useState(false);
-  const [wires, setWires] = useState<Array<{ componentId: string; descriptionId: string; }>>([]);
-  const [currentWire, setCurrentWire] = useState<{ startPoint: Point; endPoint: Point; color: string } | null>(null);
-  const [dragOrigin, setDragOrigin] = useState<Anchor | null>(null);
+  const [wires, setWires] = useState<Wire[]>([]);
+  const [score, setScore] = useState(0);
+  const [isVerified, setIsVerified] = useState(false);
 
-  const handlePointerDown = (event: PointerEvent<HTMLElement>): void => {
-      const element = (event.target as HTMLElement).closest('[data-side]');
-      const origin = findAnchor(element);
-      if (!element || !origin) return;
-      event.preventDefault();
-      event.currentTarget.setPointerCapture(event.pointerId);
-      setDragOrigin(origin);
-      setCurrentWire({
-          startPoint: findPoint(element),
-          endPoint: { x: event.clientX, y: event.clientY },
-          color: findColor(origin.side === 'component' ? origin.id : "")
-        });
-  }
+  // Each piece can hold at most one wire, so a new connection replaces whatever
+  // was already attached to either of its two ends.
+  const addWire = (wire: Wire) => {
+    setWires(prev => [
+      ...prev.filter(w => w.componentId !== wire.componentId && w.descriptionId !== wire.descriptionId),
+      wire
+    ]);
+  };
 
-  const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
-      if (!dragOrigin) return;
-      event.preventDefault();
-      const cursor = { x: event.clientX, y: event.clientY };
-      const target = findSnapTarget(cursor, dragOrigin);
-      const endPoint = target ? findPoint(target) : cursor;
-      setCurrentWire(prev => prev ? { ...prev, endPoint } : null);
-  }
+  const checkWork = () => {
+    setScore(wires.filter(isCorrect).length);
+    setIsVerified(true);
+  };
 
-  const handlePointerUp = (event: PointerEvent<HTMLElement>) => {
-      const target = findAnchor(findSnapTarget({ x: event.clientX, y: event.clientY }, dragOrigin));
-      if (dragOrigin && target) {
-          const componentId = dragOrigin.side === 'component' ? dragOrigin.id : target.id;
-          const descriptionId = dragOrigin.side === 'component' ? target.id : dragOrigin.id;
-          setWires(prev => [
-              ...prev.filter(w => w.componentId !== componentId && w.descriptionId !== descriptionId),
-              { componentId, descriptionId }
-          ]);
-      }
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-          event.currentTarget.releasePointerCapture(event.pointerId);
-      }
-      setDragOrigin(null);
-      setCurrentWire(null);
-  }
+  // Reset clears the board entirely; retry keeps the wires so the user can adjust them.
+  const resetBoard = () => {
+    setWires([]);
+    setScore(0);
+    setIsVerified(false);
+  };
+
+  const retryBoard = () => {
+    setIsVerified(false);
+  };
 
   return (
     <>
-      {/* touchAction: 'none' stops a touch drag from being stolen by the scroller mid-wire. */}
-      <div style={{ display: 'flex', flex: 1, height: '100%', touchAction: 'none' }} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', flex: 1 }}>
-          <ComponentSide isVerified={isVerified} />
-        </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', flex: 2 }}></Box>
-        <WireLayer wires={toPoints(wires)} currentWire={currentWire} />
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', flex: 5 }}>
-          <DescriptionSide isVerified={isVerified} />
-        </Box>
-      </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', flexGrow: 1}}>
+      <ExerciseBoardSubheader isVerified={isVerified} handleCheckWork={checkWork} handleReset={resetBoard} />
+      <MatchingComponentBoard
+        wires={wires}
+        onConnect={addWire}
+        isVerified={isVerified}
+        componentOutlines={toOutlines(wires, 'component')}
+        descriptionOutlines={toOutlines(wires, 'description')}
+      />
+    </Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%'}}>
+      <ExerciseBoardSidebar isVerified={isVerified} score={score} handleReset={resetBoard} handleCheckWork={checkWork}/>
+    </Box>
     </>
   )
 }

@@ -7,9 +7,10 @@ import styles from './DescriptionSide.module.css'
 
 interface DescriptionSideProps {
   isVerified: boolean;
+  outlines: Record<string, string>;
 }
 
-export default function DescriptionSide({ isVerified }: DescriptionSideProps) {
+export default function DescriptionSide({ isVerified, outlines }: DescriptionSideProps) {
   return ( <>
     <div className={styles['button--column']}>
       {CA_COMPONENTS.map((component) => ( <>
@@ -17,7 +18,7 @@ export default function DescriptionSide({ isVerified }: DescriptionSideProps) {
         <div data-side="description" data-id={component.id}>
           <DescriptionComponentPiece
             label={component.id}
-            buttonOutline="outline"
+            buttonOutline={isVerified ? outlines[component.id] ?? '' : ''}
             isVerified={isVerified}
           />
         </div>

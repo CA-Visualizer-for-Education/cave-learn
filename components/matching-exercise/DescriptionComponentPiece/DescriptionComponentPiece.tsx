@@ -14,9 +14,16 @@ const getDescription = (label : string): string => {
 }
 
 export default function DescriptionComponentPiece({ label, buttonOutline, isVerified } : DescriptionComponentPieceProps) {
-    return (isVerified ?
-        <button type="button" className={`${styles['description-button']} ${styles[buttonOutline]}`}>{ getDescription(label) }</button>
-        :
-        <button type="button" className={styles['description-button']}>{ getDescription(label) }</button>
+    const description = getDescription(label);
+    // The clamped copy is what's laid out; the tooltip copy is aria-hidden so the
+    // button's accessible name stays the full description exactly once.
+    // first span is the cut-off description, second span appears when hovered
+    const content = <>
+        <span className={styles['description-text']}>{ description }</span>
+        <span className={styles['description-tooltip']} aria-hidden="true">{ description }</span>
+    </>;
+
+    return (
+        <button type="button" aria-label={description} className={`${styles['description-button']} ${isVerified ? styles['description-button'] : ""}`}>{ content }</button>
     )
 }

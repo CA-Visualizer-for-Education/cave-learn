@@ -49,6 +49,10 @@
     width: 100%;
 }
 
+.button--neutral {
+    border: 2px solid var(--color-border);
+}
+
 .button--correct {
     border: 2px solid lime;
 }

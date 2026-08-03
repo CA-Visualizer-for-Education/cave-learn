@@ -1,0 +1,14 @@
+.dashboard {
+  margin: var(--space-4) 0;
+}
+
+.errorMessage {
+  color: var(--color-error);
+}
+
+.useCasesContainer {
+  margin: var(--space-2) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

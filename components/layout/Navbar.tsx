@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/', label: 'Home', exact: true as const },
   { href: '/diagram', label: 'Diagram', matchDiagram: true as const },
   { href: '/testyourself', label: 'Test Yourself' },
+  { href: '/testyourrepo', label: 'Test Your Repository' },
 ] as const
 
 function isNavItemActive(

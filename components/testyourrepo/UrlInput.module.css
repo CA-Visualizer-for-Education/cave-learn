@@ -1,0 +1,32 @@
+.root {
+  margin: var(--space-2) 0;
+}
+
+.inputGroup {
+  display: flex;
+  gap: var(--space-4);
+  padding: 0 var(--space-4);
+}
+
+.input {
+  flex: 1;
+  min-width: 120px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+}
+
+.button {
+  flex: 0 0 auto;
+}
+
+.input::placeholder {
+  color: var(--color-text-faint);
+}
+
+.errorMessage {
+  color: var(--color-error);
+}

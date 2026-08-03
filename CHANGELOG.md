@@ -15,6 +15,7 @@
   - Added component `ExerciseBoardSidebar` and its styling
   - Added component `ExerciseBoardSubheader` and its styling
 - Added warnings to notify users if they submit an incomplete diagram when doing the fill in the diagram exercise
+- Added responsive components to diagram page
 - Changed the colour of `ComponentPieces` to be based on its placement in the diagram by the user, with sidebar pieces being a neutral colour
 
 ### Bug Fix

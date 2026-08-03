@@ -1,10 +1,11 @@
-"use client";
 // components/exercise/ExerciseBoardSidebar/ExerciseBoardSidebar.tsx
 // The sidebar of the exercise page.
-import { ComponentPieces } from "../ComponentPieces/ComponentPieces";
-import { CA_COMPONENTS } from "@/lib/ca-data";
-import styles from "./ExerciseBoardSidebar.module.css";
-import { useDroppable } from "@dnd-kit/react";
+
+'use client';
+import { useDroppable } from '@dnd-kit/react';
+import { CA_COMPONENTS } from '@/lib/ca-data';
+import { ComponentPieces } from '../ComponentPieces/ComponentPieces';
+import styles from './ExerciseBoardSidebar.module.css';
 
 /*
   isPlaced maps button ids -> droppable area ids
@@ -32,88 +33,89 @@ export default function ExerciseBoardSidebar({
   handleRetry,
   handleCheckWork,
 }: ExerciseBoardSidebarProps) {
-  // const {ref} = useDroppable({id : "sidebar-droppable"}) was removed to see if it still works directly passing ref.
+  const { ref: sidebarDroppableRef } = useDroppable({
+    id: 'sidebar-droppable',
+  });
 
   return (
     <>
       {isVerified ? (
-        <div className={styles["sidebar--verified--container"]}>
-          <div className={styles["sidebar--results-text"]}>
-            <div className={styles["results--circle"]}></div>
-            <p className={`text-eyebrow ${styles["results-text"]}`}>RESULTS</p>
+        <div className={styles['sidebar--verified--container']}>
+          <div className={styles['sidebar--results-text']}>
+            <div className={styles['results--circle']}></div>
+            <p className={`text-eyebrow ${styles['results-text']}`}>RESULTS</p>
           </div>
-          <div className={styles["sidebar--circle--container"]}>
+          <div className={styles['sidebar--circle--container']}>
             <svg
-              className={styles["sidebar--circle-ring"]}
-              width="12vw"
-              height="12vw"
+              className={styles['sidebar--circle-ring']}
+              viewBox="0 0 100 100"
+              role="img"
+              aria-label={`Score: ${score} out of ${CA_COMPONENTS.length}`}
             >
               <circle
                 stroke="#e6e6e6"
-                strokeWidth="15"
+                strokeWidth="8"
                 fill="transparent"
-                r="4.5vw"
+                r="45"
                 cx="50%"
                 cy="50%"
               />
-              {/* To calculate strokeDasharray: 2 * PI * 4.5vw(radius). To calculate strokeDashoffset: take strokeDasharray - strokeDasharray * (% of circle)*/}
               <circle
                 style={{
-                  strokeDasharray: "calc(2 * 3.14 * 4.5vw)",
-                  strokeDashoffset: `calc(2 * 3.14 * 4.5vw - (2 * 3.14 * 4.5vw) * ${score / CA_COMPONENTS.length})`,
+                  strokeDasharray: 100,
+                  strokeDashoffset: 100 - (score / CA_COMPONENTS.length) * 100,
                 }}
+                pathLength="100"
                 stroke="var(--color-brand-green)"
-                strokeWidth="15"
+                strokeWidth="8"
                 strokeLinecap="round"
                 fill="transparent"
-                r="4.5vw"
+                r="45"
                 cx="50%"
                 cy="50%"
               />
             </svg>
-            <div className={styles["score-description--container"]}>
-              <span className={styles["score-text"]}>{score}</span>
-              <span className={styles["max-score-text"]}>
-                /{CA_COMPONENTS.length}
-              </span>
-              {score / CA_COMPONENTS.length > 0.75 ? (
-                score == CA_COMPONENTS.length ? (
-                  <p className={styles["score-description-good"]}>PERFECT</p>
-                ) : (
-                  <p className={styles["score-description-good"]}>NICE</p>
-                )
-              ) : (
-                <p className={styles["score-description-good"]}>&nbsp;</p>
+            <div className={styles['score-description--container']}>
+              <div>
+                <span className={styles['score-text']}>{score}</span>
+                <span className={styles['max-score-text']}>
+                  /{CA_COMPONENTS.length}
+                </span>
+              </div>
+              {score / CA_COMPONENTS.length > 0.75 && (
+                <p className={styles['score-description-good']}>
+                  {score === CA_COMPONENTS.length ? 'PERFECT' : 'NICE'}
+                </p>
               )}
             </div>
           </div>
-          <div className={styles["sidebar--incorrect-components-title"]}>
+          <div className={styles['sidebar--incorrect-components-title']}>
             {CA_COMPONENTS.some(
-              (component) => isPlaced[component.id] != component.id,
+              (component) => isPlaced[component.id] !== component.id
             ) && (
-              <p
-                className={`text-h2 ${styles["incorrect-components--header"]}`}
+              <h2
+                className={`text-h2 ${styles['incorrect-components--header']}`}
               >
                 Incorrect Components
-              </p>
+              </h2>
             )}
           </div>
-          <div className={styles["sidebar--incorrect-components"]}>
+          <div className={styles['sidebar--incorrect-components']}>
             {CA_COMPONENTS.filter(
-              (component) => isPlaced[component.id] != component.id,
+              (component) => isPlaced[component.id] !== component.id
             ).map((component) => (
               <ComponentPieces
                 key={component.id}
                 label={component.id}
                 layer={component.layer}
-                currentLayer={""}
-                verificationStatus={"verified-incorrect"}
+                currentLayer={''}
+                verificationStatus={'verified-incorrect'}
               />
             ))}
           </div>
-          <div className={styles["retry-button--container"]}>
+          <div className={styles['retry-button--container']}>
             <button
-              className={`btn btn--primary ${styles["retry-button"]}`}
+              className={`btn btn--primary ${styles['retry-button']}`}
               type="button"
               onClick={handleRetry}
             >
@@ -122,42 +124,44 @@ export default function ExerciseBoardSidebar({
           </div>
         </div>
       ) : (
-        <aside className={styles["sidebar--container"]}>
-          <div className={styles["pieces--container"]}>
+        <aside className={styles['sidebar--container']}>
+          <div className={styles['pieces--container']}>
             <p>PIECES</p>
           </div>
-          <div className={styles["description--container"]}>
-            <p className={styles["description-text"]}>
+          <div className={styles['description--container']}>
+            <p className={styles['description-text']}>
               Drag each chip into the slot you think it belongs in. Drop chips
               back here to remove.
             </p>
           </div>
           <div
-            className={styles["buttons--container"]}
-            ref={useDroppable({ id: "sidebar-droppable" }).ref}
+            className={styles['buttons--container']}
+            ref={sidebarDroppableRef}
           >
             {CA_COMPONENTS.filter(
-              (component) => isPlaced[component.id] == "",
+              (component) => isPlaced[component.id] === ''
             ).map((component) => (
               <ComponentPieces
                 key={component.id}
                 label={component.id}
                 layer={component.layer}
                 currentLayer={isPlaced[component.id]}
-                verificationStatus={"unverified"}
+                verificationStatus={'unverified'}
               />
             ))}
           </div>
-          <div className={styles["check-work-reset--container"]}>
+          <div className={styles['check-work-reset--container']}>
             <button
-              className={`btn btn--primary ${styles["btn--check-work"]} ${CA_COMPONENTS.some((component) => isPlaced[component.id] === "") && styles["btn--check-work--incomplete-diagram"]}`}
+              className={`btn btn--primary ${styles['btn--check-work']} ${CA_COMPONENTS.some((component) => isPlaced[component.id] === '') && styles['btn--check-work--incomplete-diagram']}`}
               onClick={handleCheckWork}
+              type="button"
             >
               Check My Work
             </button>
             <button
-              className={`btn btn--secondary ${styles["btn--reset"]}`}
+              className={`btn btn--secondary ${styles['btn--reset']}`}
               onClick={handleReset}
+              type="button"
             >
               Reset
             </button>

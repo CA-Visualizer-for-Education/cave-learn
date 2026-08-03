@@ -90,10 +90,6 @@
     font-size: 0.9rem;
 }
 
-.button--column {
-    flex: 1;
-}
-
 .retry-button--container {
     width: 95%;
     display: flex;
@@ -144,8 +140,12 @@
 .buttons--container {
     width: 95%;
     height: 400px;
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: start;
+    justify-items: stretch;
+    align-content: start;
+    align-items: stretch;
     gap: 0px 10px;
 }
 

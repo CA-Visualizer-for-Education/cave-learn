@@ -6,9 +6,10 @@ import ExerciseBoardSubheader from './ExerciseBoardSubheader/ExerciseBoardSubhea
 import ExerciseBoardSidebar from './ExerciseBoardSidebar/ExerciseBoardSidebar'
 import MatchingComponentBoard, { Wire } from './MatchingComponentBoard/MatchingComponentBoard'
 import { CA_COMPONENTS } from '@/lib/ca-data'
+import styles from './MatchingExerciseBoard.module.css';
 
 // A wire is correct when the component it starts from is the one its description belongs to.
-function isCorrect(wire: Wire): boolean {
+function isCorrectFromWire(wire: Wire): boolean {
   return wire.componentId === wire.descriptionId;
 }
 
@@ -19,7 +20,7 @@ function toOutlines(wires: Wire[], side: 'component' | 'description'): Record<st
     CA_COMPONENTS.map((component) => {
       const wire = wires.find(w => (side === 'component' ? w.componentId : w.descriptionId) === component.id);
       if (!wire) return [component.id, ''];
-      return [component.id, isCorrect(wire) ? 'button--correct' : 'button--incorrect'];
+      return [component.id, isCorrectFromWire(wire) ? 'button--correct' : 'button--incorrect'];
     })
   );
 }
@@ -28,6 +29,11 @@ export default function MatchingExerciseBoard() {
   const [wires, setWires] = useState<Wire[]>([]);
   const [score, setScore] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
+
+  function isCorrectFromComponentId(componentId: string): boolean {
+    const wire = wires.find(w => w.componentId === componentId);
+    return wire ? isCorrectFromWire(wire) : false;
+  }
 
   // Each piece can hold at most one wire, so a new connection replaces whatever
   // was already attached to either of its two ends.
@@ -39,18 +45,16 @@ export default function MatchingExerciseBoard() {
   };
 
   const checkWork = () => {
-    setScore(wires.filter(isCorrect).length);
+    // unsure if we want this but you can only check if all your wires are connected
+    if (wires.length != CA_COMPONENTS.length) return;
+    setScore(wires.filter(isCorrectFromWire).length);
     setIsVerified(true);
   };
 
-  // Reset clears the board entirely; retry keeps the wires so the user can adjust them.
+  // Reset clears the board entirely
   const resetBoard = () => {
     setWires([]);
     setScore(0);
-    setIsVerified(false);
-  };
-
-  const retryBoard = () => {
     setIsVerified(false);
   };
 
@@ -58,16 +62,18 @@ export default function MatchingExerciseBoard() {
     <>
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', flexGrow: 1}}>
       <ExerciseBoardSubheader isVerified={isVerified} handleCheckWork={checkWork} handleReset={resetBoard} />
-      <MatchingComponentBoard
-        wires={wires}
-        onConnect={addWire}
-        isVerified={isVerified}
-        componentOutlines={toOutlines(wires, 'component')}
-        descriptionOutlines={toOutlines(wires, 'description')}
-      />
+      <div className = {styles['board']}>
+        <MatchingComponentBoard
+          wires={wires}
+          onConnect={addWire}
+          isVerified={isVerified}
+          componentOutlines={toOutlines(wires, 'component')}
+          descriptionOutlines={toOutlines(wires, 'description')}
+        />
+      </div>
     </Box>
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%'}}>
-      <ExerciseBoardSidebar isVerified={isVerified} score={score} handleReset={resetBoard} handleCheckWork={checkWork}/>
+      <ExerciseBoardSidebar isVerified={isVerified} score={score} handleReset={resetBoard} isCorrect={isCorrectFromComponentId}/>
     </Box>
     </>
   )

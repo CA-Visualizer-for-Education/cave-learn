@@ -13,16 +13,16 @@ interface DescriptionSideProps {
 export default function DescriptionSide({ isVerified, outlines }: DescriptionSideProps) {
   return ( <>
     <div className={styles['button--column']}>
-      {CA_COMPONENTS.map((component) => ( <>
-        {/* TODO(exercise): descriptions render in component order → matches line up trivially. Shuffle CA_COMPONENTS for this column to make it a real puzzle. */}
-        <div data-side="description" data-id={component.id}>
+      {/* TODO(exercise): descriptions render in component order → matches line up trivially. Shuffle CA_COMPONENTS for this column to make it a real puzzle. */}
+      {CA_COMPONENTS.map((component) => (
+        <div key={component.id} data-side="description" data-id={component.id}>
           <DescriptionComponentPiece
             label={component.id}
             buttonOutline={isVerified ? outlines[component.id] ?? '' : ''}
             isVerified={isVerified}
           />
         </div>
-      </> ))}
+      ))}
     </div>
     </>
   )

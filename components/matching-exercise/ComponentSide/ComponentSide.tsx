@@ -13,8 +13,9 @@ interface ComponentSideProps {
 export default function ComponentSide({ isVerified, outlines }: ComponentSideProps) {
   return ( <>
     <div className={styles['button--column']}>
-      {CA_COMPONENTS.map((component) => ( <>
-        <div data-side="component" data-id={component.id}>
+      {CA_COMPONENTS.map((component) => (
+        // added key here so that Next no longer gives an issue
+        <div key={component.id} data-side="component" data-id={component.id}>
           <ComponentPieces
             layer={component.layer}
             label={component.id}
@@ -24,7 +25,7 @@ export default function ComponentSide({ isVerified, outlines }: ComponentSidePro
             buttonOutline={isVerified ? outlines[component.id] ?? '' : ''}
           />
         </div>
-      </> ))}
+      ))}
     </div>
     </>
   )

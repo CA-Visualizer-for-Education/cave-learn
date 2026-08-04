@@ -1,5 +1,7 @@
 .board {
     display: flex;
+    /* Centres the two sides vertically; the columns are content-height so they can be centred. */
+    align-items: center;
     flex: 1;
     min-height: 0;
     /* Stops a touch drag from being stolen by the scroller mid-wire. */
@@ -11,7 +13,6 @@
 .board--description-column {
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
 .board--component-column {

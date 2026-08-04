@@ -1,3 +1,8 @@
 .board {
-    margin: 20px;
+    /* Fills the space under the subheader so the sides have room to centre within. */
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    margin: 20px 0;
+    padding: 0 10vw;
 }

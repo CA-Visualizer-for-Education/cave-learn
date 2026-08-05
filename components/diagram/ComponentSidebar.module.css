@@ -77,3 +77,19 @@
   width: 100%;
   min-width: 0;
 }
+
+@media (max-width: 900px) {
+  .sidebar {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding: var(--space-6);
+  }
+
+  .sidebarEmpty {
+    width: 100%;
+    height: auto;
+    min-height: 140px;
+    box-sizing: border-box;
+  }
+}

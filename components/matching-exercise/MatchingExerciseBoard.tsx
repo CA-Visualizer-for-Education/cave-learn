@@ -8,6 +8,7 @@ import ExerciseBoardSubheader from './ExerciseBoardSubheader/ExerciseBoardSubhea
 import ExerciseBoardSidebar from './ExerciseBoardSidebar/ExerciseBoardSidebar'
 import MatchingComponentBoard from './MatchingComponentBoard/MatchingComponentBoard'
 import type { Wire } from './types'
+import type { VerificationStatus } from '../common/ComponentPieces/ComponentPieces'
 import { CA_COMPONENTS } from '@/lib/ca-data'
 import styles from './MatchingExerciseBoard.module.css';
 
@@ -17,15 +18,15 @@ function isCorrectFromWire(wire: Wire): boolean {
 }
 
 /*
-Per-id outline class for one side of the board. Pieces with no wire attached stay
-unstyled so "unanswered" never reads as "correct".
+Per-id verification status for one side of the board. Pieces with no wire attached stay
+"unverified" so an unanswered row never reads as correct.
 */
-function toOutlines(wires: Wire[], side: 'component' | 'description'): Record<string, string> {
+function toStatuses(wires: Wire[], side: 'component' | 'description'): Record<string, VerificationStatus> {
   return Object.fromEntries(
     CA_COMPONENTS.map((component) => {
       const wire = wires.find(w => (side === 'component' ? w.componentId : w.descriptionId) === component.id);
-      if (!wire) return [component.id, ''];
-      return [component.id, isCorrectFromWire(wire) ? 'button--correct' : 'button--incorrect'];
+      if (!wire) return [component.id, 'unverified'];
+      return [component.id, isCorrectFromWire(wire) ? 'verified-correct' : 'verified-incorrect'];
     })
   );
 }
@@ -76,8 +77,8 @@ export default function MatchingExerciseBoard() {
           wires={wires}
           onConnect={addWire}
           isVerified={isVerified}
-          componentOutlines={toOutlines(wires, 'component')}
-          descriptionOutlines={toOutlines(wires, 'description')}
+          componentStatuses={toStatuses(wires, 'component')}
+          descriptionStatuses={toStatuses(wires, 'description')}
         />
       </div>
     </Box>

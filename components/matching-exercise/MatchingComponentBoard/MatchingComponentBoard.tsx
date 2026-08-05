@@ -9,6 +9,7 @@ import ComponentSide from '../ComponentSide/ComponentSide'
 import DescriptionSide from '../DescriptionSide/DescriptionSide'
 import WireLayer from '../Wire/WireLayer'
 import type { Anchor, Point, Wire, WireSegment } from '../types'
+import type { VerificationStatus } from '../../common/ComponentPieces/ComponentPieces'
 import { CA_COMPONENTS, CA_LAYERS } from '@/lib/ca-data'
 import styles from './MatchingComponentBoard.module.css'
 
@@ -16,14 +17,14 @@ import styles from './MatchingComponentBoard.module.css'
 wires: every connection the user has drawn; owned by MatchingExerciseBoard.
 onConnect: reports a newly drawn wire so the owner can record it.
 isVerified: whether "Check my work" has been pressed.
-componentOutlines / descriptionOutlines: per-id correctness classes, only rendered once verified.
+componentStatuses / descriptionStatuses: per-id correctness, only applied once verified.
 */
 interface MatchingComponentBoardProps {
   wires: Wire[];
   onConnect(wire: Wire): void;
   isVerified: boolean;
-  componentOutlines: Record<string, string>;
-  descriptionOutlines: Record<string, string>;
+  componentStatuses: Record<string, VerificationStatus>;
+  descriptionStatuses: Record<string, VerificationStatus>;
 }
 
 /** The wire colour for a component: its layer colour, or the description fill when there is no component. */
@@ -76,20 +77,10 @@ function findAnchor(element: Element | null | undefined): Anchor | null {
   return { side, id };
 }
 
-export default function MatchingComponentBoard({ wires, onConnect, isVerified, componentOutlines, descriptionOutlines }: MatchingComponentBoardProps) {
+export default function MatchingComponentBoard({ wires, onConnect, isVerified, componentStatuses, descriptionStatuses }: MatchingComponentBoardProps) {
   const [currentWire, setCurrentWire] = useState<WireSegment | null>(null);
   const [dragOrigin, setDragOrigin] = useState<Anchor | null>(null);
-  // Wire positions are measured during render, so a resize would otherwise leave
-  // them pointing at where the pieces used to be. Bumping this forces a re-measure.
-  const [, setResizeTick] = useState(0);
 
-  useEffect(() => {
-    const remeasure = () => setResizeTick(tick => tick + 1);
-    window.addEventListener('resize', remeasure);
-    return () => window.removeEventListener('resize', remeasure);
-  }, []);
-
-  /** Start a wire from the piece under the pointer. */
   const handlePointerDown = (event: PointerEvent<HTMLElement>): void => {
       const element = (event.target as HTMLElement).closest('[data-side]');
       const origin = findAnchor(element);
@@ -135,12 +126,12 @@ export default function MatchingComponentBoard({ wires, onConnect, isVerified, c
   return (
     <div className={styles['board']} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
       <Box className={styles['board--component-column']}>
-        <ComponentSide isVerified={isVerified} outlines={componentOutlines} />
+        <ComponentSide isVerified={isVerified} statuses={componentStatuses} />
       </Box>
       <Box className={styles['board--spacer-column']}></Box>
       <WireLayer wires={toSegments(wires)} currentWire={currentWire} />
       <Box className={styles['board--description-column']}>
-        <DescriptionSide isVerified={isVerified} outlines={descriptionOutlines} />
+        <DescriptionSide isVerified={isVerified} statuses={descriptionStatuses} />
       </Box>
     </div>
   )

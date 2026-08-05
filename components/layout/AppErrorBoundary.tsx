@@ -1,6 +1,6 @@
 'use client'
 
-import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
+import { ErrorBoundary, getErrorMessage, type FallbackProps } from 'react-error-boundary'
 import styles from './AppErrorFallback.module.css'
 
 const ISSUES_URL = 'https://github.com/CA-Visualizer-for-Education/cave-learn/issues'
@@ -32,8 +32,7 @@ function AppErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
           {process.env.NODE_ENV !== 'production' && (
             <details className={styles.errorDetail}>
               <summary>Technical details</summary>
-              {/* react-error-boundary types the caught value as unknown, so narrow before reading .message */}
-              <pre className={styles.errorText}>{error instanceof Error ? error.message : String(error)}</pre>
+              <pre className={styles.errorText}>{getErrorMessage(error)}</pre>
             </details>
           )}
 

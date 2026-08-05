@@ -2,7 +2,7 @@
 // The sidebar of the matching exercise page. Nothing is shown until the board is
 // verified; after that it is the shared results panel listing the missed components.
 import { CA_COMPONENTS } from '@/lib/ca-data';
-import ComponentPieces from '../../common/ComponentPieces/ComponentPieces';
+import { ComponentPieces } from '../../common/ComponentPieces/ComponentPieces';
 import ExerciseResultsPanel from '../../common/ExerciseResultsPanel/ExerciseResultsPanel';
 
 /*
@@ -24,7 +24,14 @@ export default function ExerciseBoardSidebar ({ isVerified, score, handleReset, 
     return (
         <ExerciseResultsPanel score={score} total={CA_COMPONENTS.length} incorrectHeading="Incorrect Components" onRetry={handleReset}>
             {CA_COMPONENTS.filter((component) => !isCorrect(component.id)).map((component) => (
-                <ComponentPieces key={component.id} layer={component.layer} label={component.id} inDroppable={false} isVerified={isVerified} draggable={false} buttonOutline={""}/>
+                <ComponentPieces
+                    key={component.id}
+                    label={component.id}
+                    layer={component.layer}
+                    currentLayer={''}
+                    verificationStatus={'verified-incorrect'}
+                    draggable={false}
+                />
             ))}
         </ExerciseResultsPanel>
     )

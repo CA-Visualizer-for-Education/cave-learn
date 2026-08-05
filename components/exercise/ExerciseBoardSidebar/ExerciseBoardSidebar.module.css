@@ -1,80 +1,79 @@
-.button--column {
-    flex: 1;
-}
+/* The verified-state rules moved to ExerciseResultsPanel.module.css along with the
+   markup they style; what remains here is the unverified "pieces" sidebar. */
 
 .sidebar--container {
-    width: 20vw;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-shrink: 0;
-    transition: width 180ms ease;
-    overflow-y: auto;
-    overflow-x: hidden;
-    border-radius: 1.5px;
-    border-bottom: 1px solid var(--color-border);
-    border-left: 1px solid var(--color-border);
-    border-right: 1px solid var(--color-border);
-    border-top: 0.5px solid var(--color-border);
-    background-color: white;
-    gap: 20px 0px;
+  width: 20vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  transition: width 180ms ease;
+  border-radius: 1.5px;
+  border-bottom: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  border-top: 0.5px solid var(--color-border);
+  background-color: white;
+  gap: 20px 0px;
 }
 
 .pieces--container {
-    width: 95%;
-    text-align: left;
-    padding-top: 110px;
+  width: 95%;
+  text-align: left;
+  padding-top: 110px;
 }
 
 .description--container {
-    width: 95%;
+  width: 95%;
 }
 
 .buttons--container {
-    width: 95%;
-    height: 400px;
-    display: flex;
-    flex-direction: row;
-    gap: 0px 10px;
+  width: 95%;
+  height: 400px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: start;
+  justify-items: stretch;
+  align-content: start;
+  align-items: stretch;
+  gap: 0px 10px;
 }
 
 .btn--check-work {
-    background-color: var(--color-brand-green);
-    font-size: clamp(.25rem, .75vw, .7rem);
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  background-color: var(--color-brand-green);
+  font-size: clamp(0.25rem, 0.75vw, 0.7rem);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn--check-work--incomplete-diagram {
-    opacity: 0.5;
+  opacity: 0.5;
 }
-
 
 .btn--check-work--incomplete-diagram:hover {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
-
 .btn--reset {
-    font-size: clamp(.25rem, .75vw, .7rem);
+  font-size: clamp(0.25rem, 0.75vw, 0.7rem);
 }
 
 .check-work-reset--container {
-    display: flex;
-    width: 95%;
-    flex-grow: 1;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-    gap: 0px 10px;
-    margin-bottom: 10px;
+  display: flex;
+  width: 95%;
+  flex-grow: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 0px 10px;
+  margin-bottom: 10px;
 }
 
 .description-text {
-    width: 100%;
+  width: 100%;
 }

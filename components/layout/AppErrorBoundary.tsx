@@ -32,7 +32,8 @@ function AppErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
           {process.env.NODE_ENV !== 'production' && (
             <details className={styles.errorDetail}>
               <summary>Technical details</summary>
-              <pre className={styles.errorText}>{error.message}</pre>
+              {/* react-error-boundary types the caught value as unknown, so narrow before reading .message */}
+              <pre className={styles.errorText}>{error instanceof Error ? error.message : String(error)}</pre>
             </details>
           )}
 

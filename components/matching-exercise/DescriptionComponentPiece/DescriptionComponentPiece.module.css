@@ -46,3 +46,11 @@
 .description-button:focus-visible .description-tooltip {
     display: block;
 }
+
+.button--correct {
+    border: 2px solid lime;
+}
+
+.button--incorrect {
+    border: 2px solid red;
+}

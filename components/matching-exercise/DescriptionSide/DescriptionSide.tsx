@@ -5,25 +5,27 @@ import { CA_COMPONENTS } from '@/lib/ca-data'
 import DescriptionComponentPiece from '../DescriptionComponentPiece/DescriptionComponentPiece'
 import styles from './DescriptionSide.module.css'
 
+/*
+isVerified: whether "Check my work" has been pressed; outlines stay hidden until it has.
+outlines: per-component-id correctness class, keyed by the component the description belongs to.
+*/
 interface DescriptionSideProps {
   isVerified: boolean;
   outlines: Record<string, string>;
 }
 
 export default function DescriptionSide({ isVerified, outlines }: DescriptionSideProps) {
-  return ( <>
+  return (
     <div className={styles['button--column']}>
-      {/* TODO(exercise): descriptions render in component order → matches line up trivially. Shuffle CA_COMPONENTS for this column to make it a real puzzle. */}
       {CA_COMPONENTS.map((component) => (
+        // data-side/data-id are what MatchingComponentBoard measures and snaps wires to.
         <div key={component.id} data-side="description" data-id={component.id}>
           <DescriptionComponentPiece
             label={component.id}
             buttonOutline={isVerified ? outlines[component.id] ?? '' : ''}
-            isVerified={isVerified}
           />
         </div>
       ))}
     </div>
-    </>
   )
 }

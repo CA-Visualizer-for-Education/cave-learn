@@ -1,18 +1,16 @@
 'use client'
-
-import { useState, PointerEvent } from 'react'
+// components/matching-exercise/MatchingComponentBoard/MatchingComponentBoard.tsx
+// The two columns of the matching board plus the wire layer drawn between them.
+// Wires are stored by piece id (see types.ts) and only resolved to pixel
+// coordinates at render time, so this file owns all of the DOM measuring.
+import { useEffect, useState, PointerEvent } from 'react'
 import { Box } from '@mui/material'
 import ComponentSide from '../ComponentSide/ComponentSide'
 import DescriptionSide from '../DescriptionSide/DescriptionSide'
 import WireLayer from '../Wire/WireLayer'
+import type { Anchor, Point, Wire, WireSegment } from '../types'
 import { CA_COMPONENTS, CA_LAYERS } from '@/lib/ca-data'
 import styles from './MatchingComponentBoard.module.css'
-
-export type Wire = { componentId: string; descriptionId: string };
-
-type Point = { x: number; y: number };
-type Side = 'component' | 'description';
-type Anchor = { side: Side; id: string };
 
 /*
 wires: every connection the user has drawn; owned by MatchingExerciseBoard.
@@ -28,35 +26,41 @@ interface MatchingComponentBoardProps {
   descriptionOutlines: Record<string, string>;
 }
 
-function findColor(componentId: string) {
+/** The wire colour for a component: its layer colour, or the description fill when there is no component. */
+function findColor(componentId: string | null) {
   const component = CA_COMPONENTS.find(c => c.id === componentId);
   return component ? CA_LAYERS[component.layer].colorHex : '#e6dfd6'; // pearl-brush colour on figma and same fill as descriptions
 }
 
-function toPoints(wires: Wire[]): Array<{ startPoint: Point; endPoint: Point; color: string }> {
-  const points: Array<{ startPoint: Point; endPoint: Point; color: string }> = [];
+/** Resolve stored wires into drawable segments by measuring the pieces they connect. */
+function toSegments(wires: Wire[]): WireSegment[] {
+  const segments: WireSegment[] = [];
+  if (typeof document === 'undefined') return segments; // nothing to measure while server rendering
   for (const wire of wires) {
     const componentElement = document.querySelector(`[data-side="component"][data-id="${wire.componentId}"]`) as HTMLElement | null;
     const descriptionElement = document.querySelector(`[data-side="description"][data-id="${wire.descriptionId}"]`) as HTMLElement | null;
     if (componentElement && descriptionElement) {
-      const startPoint = findPoint(componentElement);
-      const endPoint = findPoint(descriptionElement);
-      points.push({ startPoint, endPoint, color: findColor(wire.componentId) });
+      segments.push({
+        id: `${wire.componentId}->${wire.descriptionId}`,
+        startPoint: findPoint(componentElement),
+        endPoint: findPoint(descriptionElement),
+        color: findColor(wire.componentId),
+      });
     } else {
-      console.warn('wu oh ... could not find elements for wire:', wire);
+      console.warn('Could not find both ends of wire while drawing:', wire);
     }
   }
-  return points;
+  return segments;
 }
 
-// given an element, return the point where the wire should attach
+/** Given a piece element, return the point on its inner edge where a wire should attach. */
 function findPoint(element: Element): Point {
   const rect = element.getBoundingClientRect();
   const y = rect.top + rect.height / 2 - 4; // 4 is half of the margin difference within the /ComponentPiece due to droppable
   return element.getAttribute('data-side') === 'component' ? {x: rect.right - 1, y} : {x: rect.left + 1, y};
 }
 
-// given a point, find the element to snap to (or null if not over an element)
+/** Given a cursor point, return the piece element under it, or null when no drag is in progress. */
 function findSnapTarget(point: Point, origin: Anchor | null): Element | null {
   if (!origin) return null;
   const element = document.elementFromPoint(point.x, point.y)?.closest('[data-side]');
@@ -64,6 +68,7 @@ function findSnapTarget(point: Point, origin: Anchor | null): Element | null {
   return element;
 }
 
+/** Read the side/id data attributes off a piece element, or null if it is not a wire endpoint. */
 function findAnchor(element: Element | null | undefined): Anchor | null {
   const side = element?.getAttribute('data-side');
   const id = element?.getAttribute('data-id');
@@ -72,9 +77,19 @@ function findAnchor(element: Element | null | undefined): Anchor | null {
 }
 
 export default function MatchingComponentBoard({ wires, onConnect, isVerified, componentOutlines, descriptionOutlines }: MatchingComponentBoardProps) {
-  const [currentWire, setCurrentWire] = useState<{ startPoint: Point; endPoint: Point; color: string } | null>(null);
+  const [currentWire, setCurrentWire] = useState<WireSegment | null>(null);
   const [dragOrigin, setDragOrigin] = useState<Anchor | null>(null);
+  // Wire positions are measured during render, so a resize would otherwise leave
+  // them pointing at where the pieces used to be. Bumping this forces a re-measure.
+  const [, setResizeTick] = useState(0);
 
+  useEffect(() => {
+    const remeasure = () => setResizeTick(tick => tick + 1);
+    window.addEventListener('resize', remeasure);
+    return () => window.removeEventListener('resize', remeasure);
+  }, []);
+
+  /** Start a wire from the piece under the pointer. */
   const handlePointerDown = (event: PointerEvent<HTMLElement>): void => {
       const element = (event.target as HTMLElement).closest('[data-side]');
       const origin = findAnchor(element);
@@ -83,12 +98,14 @@ export default function MatchingComponentBoard({ wires, onConnect, isVerified, c
       event.currentTarget.setPointerCapture(event.pointerId);
       setDragOrigin(origin);
       setCurrentWire({
+          id: 'in-progress',
           startPoint: findPoint(element),
           endPoint: { x: event.clientX, y: event.clientY },
-          color: findColor(origin.side === 'component' ? origin.id : "")
+          color: findColor(origin.side === 'component' ? origin.id : null)
         });
   }
 
+  /** Track the pointer with the in-progress wire, snapping its free end to any piece underneath. */
   const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
       if (!dragOrigin) return;
       event.preventDefault();
@@ -98,6 +115,7 @@ export default function MatchingComponentBoard({ wires, onConnect, isVerified, c
       setCurrentWire(prev => prev ? { ...prev, endPoint } : null);
   }
 
+  /** Commit the wire if it landed on a piece in the opposite column, then clear the drag state. */
   const handlePointerUp = (event: PointerEvent<HTMLElement>) => {
       const secondElement = findSnapTarget({ x: event.clientX, y: event.clientY }, dragOrigin);
       const target = findAnchor(secondElement);
@@ -115,17 +133,15 @@ export default function MatchingComponentBoard({ wires, onConnect, isVerified, c
   }
 
   return (
-    <>
-      <div className={styles['board']} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
-        <Box className={styles['board--component-column']}>
-          <ComponentSide isVerified={isVerified} outlines={componentOutlines} />
-        </Box>
-        <Box className={styles['board--spacer-column']}></Box>
-        <WireLayer wires={toPoints(wires)} currentWire={currentWire} />
-        <Box className={styles['board--description-column']}>
-          <DescriptionSide isVerified={isVerified} outlines={descriptionOutlines} />
-        </Box>
-      </div>
-    </>
+    <div className={styles['board']} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
+      <Box className={styles['board--component-column']}>
+        <ComponentSide isVerified={isVerified} outlines={componentOutlines} />
+      </Box>
+      <Box className={styles['board--spacer-column']}></Box>
+      <WireLayer wires={toSegments(wires)} currentWire={currentWire} />
+      <Box className={styles['board--description-column']}>
+        <DescriptionSide isVerified={isVerified} outlines={descriptionOutlines} />
+      </Box>
+    </div>
   )
 }

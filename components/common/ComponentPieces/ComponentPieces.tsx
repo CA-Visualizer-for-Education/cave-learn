@@ -1,6 +1,7 @@
 'use client'
 // components/common/ComponentPieces/ComponentPieces.tsx
-// Right-hand panel showing the draggable CA component chips to be placed on the board.
+// A single CA component chip. Shared by both exercises: the fill-in-the-diagram
+// board drags these into droppables, the matching board wires them up in place.
 import { type LayerId } from "@/lib/ca-data";
 import styles from './ComponentPieces.module.css';
 import { useDraggable } from "@dnd-kit/react"
@@ -22,6 +23,7 @@ interface ComponentPiecesProps {
   isVerified: boolean;
 }
 
+/** Turn a kebab-case component id into its display label, e.g. "input-data" -> "Input Data". */
 const capitalizeWords = (words : string) : string => {
   const wordsSplit = words.split("-");
   let newLabel : string = "";
@@ -31,6 +33,7 @@ const capitalizeWords = (words : string) : string => {
   return newLabel.substring(0, newLabel.length - 1);
 }
 
+/** The stereotype shown above a chip: <DS> for data structures, <I> for interfaces, "" otherwise. */
 const getSubLabel = (label : string) : string => {
   if(label == "input-data" || label == "view-model" || label == "output-data"){
     return '<DS>'
@@ -40,6 +43,7 @@ const getSubLabel = (label : string) : string => {
   return "";
 }
 
+/** The badge colour class each clean architecture layer is drawn in. */
 const layerToBadge : Record<LayerId, string> = {
   'interface-adapters' : "badge badge--green",
   'application-business-rules' : "badge badge--pink",

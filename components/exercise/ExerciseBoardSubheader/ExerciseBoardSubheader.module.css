@@ -6,8 +6,7 @@
     width: 100%;
     flex-shrink: 0;
     justify-content: center;
-    padding: 15px 20px;
-    gap: 15px 0px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     border-top: 1px solid var(--color-border);

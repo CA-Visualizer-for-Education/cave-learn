@@ -5,7 +5,8 @@ function HealthyChild() {
   return <div>Healthy content</div>
 }
 
-function CrashingChild() {
+// Annotated as never so TypeScript still accepts it where a component is expected.
+function CrashingChild(): never {
   throw new Error('render failure for test')
 }
 

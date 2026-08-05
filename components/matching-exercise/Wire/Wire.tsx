@@ -1,6 +1,6 @@
 // components/matching-exercise/Wire/Wire.tsx
 // A single wire line. Rendered as a child of WireLayer's shared <svg>.
-type Point = { x: number; y: number };
+import type { Point } from '../types';
 
 interface WireProps {
     startPoint: Point;

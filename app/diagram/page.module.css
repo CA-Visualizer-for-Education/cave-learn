@@ -16,11 +16,16 @@
 }
 
 .diagramWrap {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
   padding: var(--space-6) var(--space-6) 0;
 }
 
 .legend {
   height: 90px;
   width: auto;
-  margin-bottom: var(--space-4);
+  margin: 0 auto var(--space-4);
+  flex-shrink: 0;
 }

@@ -1,0 +1,65 @@
+.contents {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.icon-text-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.icon {
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+}
+
+.close-btn {
+  box-sizing: border-box;
+  position: relative;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: none;
+}
+
+.close-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.close-ring-bg {
+  fill: transparent;
+  stroke: var(--color-border);
+}
+
+.close-ring-fg {
+  fill: transparent;
+  stroke: var(--color-brand-pink);
+  stroke-linecap: round;
+  stroke-dashoffset: 25;
+  stroke-dasharray: 0 100;
+  animation-name: fill-ring;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fill-ring {
+  from {stroke-dasharray: 0 100;}
+  to {stroke-dasharray: 100 0;}
+}
+
+.close-btn-icon {
+  z-index: 99;
+}

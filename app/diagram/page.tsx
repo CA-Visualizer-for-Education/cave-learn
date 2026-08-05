@@ -19,7 +19,7 @@ export default function DiagramPage() {
       <div className={styles.leftCol} style={{ minWidth: 0, flex: 1 }}>
         <p className={`text-eyebrow ${styles.eyebrow}`}>DIAGRAM · COMPONENTS & LAYERS</p>
         <p className={`text-h1 ${styles.heading}`}>Click any component to learn what it does.</p>
-        <Paper elevation={4} sx={{ borderRadius: 'var(--radius-card)', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '75vh' }}>
+        <Paper elevation={4} sx={{ borderRadius: 'var(--radius-card)', overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '75vh', minHeight: 0 }}>
           <div className={styles.diagramWrap}>
             <CADiagram selectedId={selectedId} onSelect={setSelectedId} />
           </div>

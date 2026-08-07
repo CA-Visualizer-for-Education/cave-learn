@@ -1,6 +1,7 @@
 "use client";
-// components/exercise/ComponentPieces/ComponentPieces.tsx
-// Right-hand panel showing the draggable CA component chips to be placed on the board.
+// components/common/ComponentPieces/ComponentPieces.tsx
+// A single CA component chip. Shared by both exercises: the fill-in-the-diagram
+// board drags these into droppables, the matching board wires them up in place.
 import { type LayerId } from "@/lib/ca-data";
 import styles from "./ComponentPieces.module.css";
 import { useDraggable } from "@dnd-kit/react";
@@ -52,12 +53,15 @@ export type VerificationStatus =
   currentLayer: The droppable CA layer the button is currently in
     - is an empty string if the button is not in a droppable
   verificationStatus: Status of the component within the board (controls styling)
+  draggable: Whether the chip can be picked up. The matching exercise renders chips
+    that are wired up rather than dragged, so it opts out.
 */
 interface ComponentPiecesProps {
   label: string;
   layer: string;
   currentLayer: string;
   verificationStatus: VerificationStatus;
+  draggable?: boolean;
 }
 
 export function ComponentPieces({
@@ -65,6 +69,7 @@ export function ComponentPieces({
   layer,
   currentLayer,
   verificationStatus,
+  draggable = true,
 }: ComponentPiecesProps) {
   /* If the button is in droppable, we need to move the entire button up the height equivalent to the height of the sublabel. 
      If isVerified, we don't care what inDroppable is since it is assumed that only components are in the droppable.
@@ -103,6 +108,8 @@ export function ComponentPieces({
     }
   })();
 
+  // Called unconditionally to keep the hook order stable across verification;
+  // only the ref is withheld when the chip should not be picked up.
   const { ref } = useDraggable({ id: label });
 
   const mainLabelClasses = [
@@ -126,7 +133,7 @@ export function ComponentPieces({
     <button
       type="button"
       className={containerClasses}
-      ref={isVerified ? undefined : ref}
+      ref={draggable && !isVerified ? ref : undefined}
     >
       {subLabel !== "" ? (
         <div className={styles["button--sublabel"]}>{subLabel}</div>

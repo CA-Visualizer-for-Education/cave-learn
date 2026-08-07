@@ -1,0 +1,56 @@
+.description-button {
+    --description-lines: 1;
+    --description-line-height: 1.4;
+    --description-max-width: calc(100% - 100px);
+
+    position: relative;
+    border-radius: var(--radius-sm);
+    /*min-height: 30px;*/
+    width: 100%;
+    max-width: var(--description-max-width);
+    max-height: calc(var(--description-lines) * var(--description-line-height) * 0.8rem + 12px);
+    margin-bottom: 8px;
+    border: none;
+    background-color: #e6dfd6; /* pearl bush color on Figma */
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 0.8rem; /* slightly smaller than the 1rem default */
+    line-height: var(--description-line-height);
+}
+
+/* Text longer than --description-lines is cut off with an ellipsis. */
+.description-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--description-lines);
+    line-clamp: var(--description-lines);
+    overflow: hidden;
+}
+
+.description-tooltip {
+    position: absolute;
+    top: calc(100% - 8px);
+    left: 0;
+    z-index: 10;
+    display: none;
+    border-radius: var(--radius-sm);
+    background-color: #2f2a24;
+    color: #f5f1ec;
+    padding: 6px 10px;
+    text-align: left;
+    line-height: var(--description-line-height);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+}
+
+.description-button:hover .description-tooltip,
+.description-button:focus-visible .description-tooltip {
+    display: block;
+}
+
+.button--correct {
+    border: 2px solid lime;
+}
+
+.button--incorrect {
+    border: 2px solid red;
+}

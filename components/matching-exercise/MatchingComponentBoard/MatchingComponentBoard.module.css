@@ -1,0 +1,28 @@
+.board {
+    display: flex;
+    /* Centres the two sides vertically; the columns are content-height so they can be centred. */
+    align-items: center;
+    flex: 1;
+    min-height: 0;
+    /* Stops a touch drag from being stolen by the scroller mid-wire. */
+    touch-action: none;
+}
+
+.board--component-column,
+.board--spacer-column,
+.board--description-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.board--component-column {
+    flex: 1;
+}
+
+.board--spacer-column {
+    flex: 2;
+}
+
+.board--description-column {
+    flex: 5;
+}

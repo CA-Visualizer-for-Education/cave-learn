@@ -1,0 +1,118 @@
+/* Extracted from ExerciseBoardSidebar's verified state so both exercises share one
+   results view. Class names are renamed from sidebar--* to results-panel--*; the
+   rules themselves track the exercise sidebar. */
+
+.results-panel--container {
+  width: 20vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: width 180ms ease;
+  border-radius: 1.5px;
+  border-bottom: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  border-top: 0.5px solid var(--color-border);
+  background-color: white;
+}
+
+.results-panel--results-text {
+  width: 95%;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.results--circle {
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-brand-green);
+  border-radius: 50%;
+}
+
+.results-text {
+  color: var(--color-brand-green);
+  text-align: left;
+  line-height: 1;
+}
+
+.results-panel--circle--container {
+  position: relative;
+  width: 100%;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-panel--circle-ring {
+  width: min(90%, 12rem);
+  height: 100%;
+  transform: rotate(-90deg); /* Rotate so it starts at the top */
+}
+
+.score-description--container {
+  position: absolute;
+  inset: 0;
+  font-size: 2.5vw;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.score-text {
+  color: black;
+  font-weight: bold;
+}
+
+.max-score-text {
+  color: var(--color-text-faint);
+  font-weight: bold;
+}
+
+.score-description-good {
+  font-size: 1vw;
+  color: var(--color-brand-green);
+}
+
+.results-panel--incorrect-items-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-panel--incorrect-items {
+  margin-top: 1rem;
+  width: 95%;
+  display: flex;
+  overflow-x: auto;
+  flex-direction: row;
+  gap: 0px 10px;
+}
+
+.incorrect-items--header {
+  font-size: 0.9rem;
+}
+
+.retry-button--container {
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 0.5rem;
+}
+
+.retry-button {
+  width: 100%;
+  height: 3rem;
+  background-color: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -13,7 +13,7 @@ import { ReactElement } from "react";
 import {
   ComponentPieces,
   type VerificationStatus,
-} from "../ComponentPieces/ComponentPieces";
+} from "../../common/ComponentPieces/ComponentPieces";
 
 const componentToLayer = Object.fromEntries(
   CA_COMPONENTS.map((component) => [component.id, component.layer]),

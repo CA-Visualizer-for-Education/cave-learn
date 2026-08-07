@@ -2,7 +2,7 @@
 // components/exercise/ComponentPiecesDroppableArea/ComponentPiecesDroppableArea.tsx
 // The droppable area in the exercise board.
 import { useDroppable } from "@dnd-kit/react";
-import { ComponentPieces } from "../ComponentPieces/ComponentPieces";
+import { ComponentPieces } from "../../common/ComponentPieces/ComponentPieces";
 import styles from "./ComponentPiecesDroppableArea.module.css";
 import { ReactElement } from "react";
 

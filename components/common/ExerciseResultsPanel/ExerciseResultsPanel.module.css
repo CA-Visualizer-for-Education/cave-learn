@@ -89,9 +89,13 @@
 .results-panel--incorrect-items {
   margin-top: 1rem;
   width: 95%;
-  display: flex;
-  overflow-x: auto;
-  flex-direction: row;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: start;
+  justify-items: stretch;
+  align-content: start;
+  align-items: stretch;
   gap: 0px 10px;
 }
 

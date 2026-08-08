@@ -18,6 +18,7 @@
 - Added responsive components to diagram page
 - Changed the colour of `ComponentPieces` to be based on its placement in the diagram by the user, with sidebar pieces being a neutral colour
 - Added a new `MatchingExercise` page and its styling
+- Added dashboard to display violations in any GitHub repository
 
 ### Bug Fix
 

@@ -4,32 +4,54 @@
 .sidebar--container {
   width: 20vw;
   height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   transition: width 180ms ease;
   border-radius: 1.5px;
+  border-top: 0.5px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   border-left: 1px solid var(--color-border);
-  border-right: 1px solid var(--color-border);
-  border-top: 0.5px solid var(--color-border);
+  padding-top: var(--space-6);
+  padding-right: var(--space-2);
+  padding-bottom: 0px;
+  padding-left: var(--space-2);
   background-color: white;
-  gap: 20px 0px;
+  gap: var(--space-6) 0px;
 }
 
-.pieces--container {
-  width: 95%;
+@media screen and (max-height: 680px) {
+  .sidebar--container {
+    /* prevents content from cutting off at the top*/
+    justify-content: flex-start;
+  }
+}
+
+.header--container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.title--container {
+  width: 100%;
   text-align: left;
-  padding-top: 110px;
 }
 
 .description--container {
-  width: 95%;
+  width: 100%;
+}
+
+.description-text {
+  width: 100%;
 }
 
 .buttons--container {
-  width: 95%;
+  width: 100%;
   height: 400px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -63,17 +85,15 @@
 }
 
 .check-work-reset--container {
+  position: sticky;
+  bottom: 0;
+  padding: var(--space-1) 0px;
+  background-clip: padding-box; /* bg colour applies to padding */
+  background-color: white;
   display: flex;
-  width: 95%;
-  flex-grow: 1;
+  width: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
   gap: 0px 10px;
-  margin-bottom: 10px;
-}
-
-.description-text {
-  width: 100%;
 }

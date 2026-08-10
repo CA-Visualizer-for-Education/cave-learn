@@ -14,11 +14,12 @@
   border-left: 1px solid var(--color-border);
   border-right: 1px solid var(--color-border);
   border-top: 0.5px solid var(--color-border);
+  padding: var(--space-2);
   background-color: white;
 }
 
 .results-panel--results-text {
-  width: 95%;
+  width: 100%;
   margin-top: 40px;
   display: flex;
   align-items: center;
@@ -87,11 +88,15 @@
 }
 
 .results-panel--incorrect-items {
+  width: 100%;
   margin-top: 1rem;
-  width: 95%;
-  display: flex;
-  overflow-x: auto;
-  flex-direction: row;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: start;
+  justify-items: stretch;
+  align-content: start;
+  align-items: stretch;
   gap: 0px 10px;
 }
 
@@ -100,7 +105,7 @@
 }
 
 .retry-button--container {
-  width: 95%;
+  width: 100%;
   display: flex;
   justify-content: center;
   margin-top: auto;

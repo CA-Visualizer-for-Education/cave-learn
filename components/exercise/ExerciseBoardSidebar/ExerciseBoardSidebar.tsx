@@ -1,12 +1,12 @@
 // components/exercise/ExerciseBoardSidebar/ExerciseBoardSidebar.tsx
 // The sidebar of the exercise page.
 
-'use client';
-import { useDroppable } from '@dnd-kit/react';
-import { CA_COMPONENTS } from '@/lib/ca-data';
-import { ComponentPieces } from '../../common/ComponentPieces/ComponentPieces';
-import ExerciseResultsPanel from '../../common/ExerciseResultsPanel/ExerciseResultsPanel';
-import styles from './ExerciseBoardSidebar.module.css';
+"use client";
+import { useDroppable } from "@dnd-kit/react";
+import { CA_COMPONENTS } from "@/lib/ca-data";
+import { ComponentPieces } from "../../common/ComponentPieces/ComponentPieces";
+import ExerciseResultsPanel from "../../common/ExerciseResultsPanel/ExerciseResultsPanel";
+import styles from "./ExerciseBoardSidebar.module.css";
 
 /*
   isPlaced maps button ids -> droppable area ids
@@ -35,7 +35,7 @@ export default function ExerciseBoardSidebar({
   handleCheckWork,
 }: ExerciseBoardSidebarProps) {
   const { ref: sidebarDroppableRef } = useDroppable({
-    id: 'sidebar-droppable',
+    id: "sidebar-droppable",
   });
 
   return (
@@ -48,54 +48,56 @@ export default function ExerciseBoardSidebar({
           onRetry={handleRetry}
         >
           {CA_COMPONENTS.filter(
-            (component) => isPlaced[component.id] !== component.id
+            (component) => isPlaced[component.id] !== component.id,
           ).map((component) => (
             <ComponentPieces
               key={component.id}
               label={component.id}
               layer={component.layer}
-              currentLayer={''}
-              verificationStatus={'verified-incorrect'}
+              currentLayer={""}
+              verificationStatus={"verified-incorrect"}
             />
           ))}
         </ExerciseResultsPanel>
       ) : (
-        <aside className={styles['sidebar--container']}>
-          <div className={styles['pieces--container']}>
-            <p>PIECES</p>
-          </div>
-          <div className={styles['description--container']}>
-            <p className={styles['description-text']}>
-              Drag each chip into the slot you think it belongs in. Drop chips
-              back here to remove.
-            </p>
+        <aside className={styles["sidebar--container"]}>
+          <div className={styles["header--container"]}>
+            <div className={styles["title--container"]}>
+              <p>PIECES</p>
+            </div>
+            <div className={styles["description--container"]}>
+              <p className={styles["description-text"]}>
+                Drag each chip into the slot you think it belongs in. Drop chips
+                back here to remove.
+              </p>
+            </div>
           </div>
           <div
-            className={styles['buttons--container']}
+            className={styles["buttons--container"]}
             ref={sidebarDroppableRef}
           >
             {CA_COMPONENTS.filter(
-              (component) => isPlaced[component.id] === ''
+              (component) => isPlaced[component.id] === "",
             ).map((component) => (
               <ComponentPieces
                 key={component.id}
                 label={component.id}
                 layer={component.layer}
                 currentLayer={isPlaced[component.id]}
-                verificationStatus={'unverified'}
+                verificationStatus={"unverified"}
               />
             ))}
           </div>
-          <div className={styles['check-work-reset--container']}>
+          <div className={styles["check-work-reset--container"]}>
             <button
-              className={`btn btn--primary ${styles['btn--check-work']} ${CA_COMPONENTS.some((component) => isPlaced[component.id] === '') && styles['btn--check-work--incomplete-diagram']}`}
+              className={`btn btn--primary ${styles["btn--check-work"]} ${CA_COMPONENTS.some((component) => isPlaced[component.id] === "") && styles["btn--check-work--incomplete-diagram"]}`}
               onClick={handleCheckWork}
               type="button"
             >
               Check My Work
             </button>
             <button
-              className={`btn btn--secondary ${styles['btn--reset']}`}
+              className={`btn btn--secondary ${styles["btn--reset"]}`}
               onClick={handleReset}
               type="button"
             >

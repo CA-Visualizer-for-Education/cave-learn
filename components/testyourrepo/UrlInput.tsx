@@ -1,7 +1,8 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useActionState, useEffect } from 'react';
-import { runCaveOnUrl } from '@/lib/actions/runCave';
+import { submitRepoUrl } from '@/lib/actions/runCave';
+import type { CaveErrorCode } from '@/lib/cave-error';
 import styles from './UrlInput.module.css';
 
 type State =
@@ -10,6 +11,15 @@ type State =
   | { status: 'error'; message: string };
 
 const initialState: State = { status: 'idle' };
+
+const errorMessages: Record<CaveErrorCode, string> = {
+  INVALID_URL:
+    'Enter a GitHub repository URL, like https://github.com/owner/repo.',
+  REPO_UNAVAILABLE:
+    'Could not read that repository. Make sure it exists and is public.',
+  ANALYSIS_FAILED: 'Could not analyze that repository. Please try again.',
+  UNKNOWN: 'Something went wrong. Please try again.',
+};
 
 async function handleUrlSubmit(
   _prevState: State,
@@ -20,16 +30,14 @@ async function handleUrlSubmit(
     return { status: 'error', message: 'Please enter a URL.' };
   }
 
-  const url = rawUrl.trim();
-
   try {
-    const { owner, repo } = await runCaveOnUrl(url);
-    return { status: 'success', owner, repo };
-  } catch (err) {
-    return {
-      status: 'error',
-      message: err instanceof Error ? err.message : 'Something went wrong.',
-    };
+    const result = await submitRepoUrl(rawUrl.trim());
+    if (result.ok) {
+      return { status: 'success', owner: result.owner, repo: result.repo };
+    }
+    return { status: 'error', message: errorMessages[result.code] };
+  } catch {
+    return { status: 'error', message: errorMessages.UNKNOWN };
   }
 }
 export const UrlInput = () => {

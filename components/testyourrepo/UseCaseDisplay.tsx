@@ -22,33 +22,75 @@ type Violation = {
 
 type UseCaseDisplayProps = {
   useCase: UseCase;
-  port: number;
+  owner: string;
+  repo: string;
 };
 
-export const UseCaseDisplay = ({ useCase, port }: UseCaseDisplayProps) => {
-  const [violations, setViolations] = useState<Violation[]>([]);
+export const UseCaseDisplay = ({
+  useCase,
+  owner,
+  repo,
+}: UseCaseDisplayProps) => {
+  const [violations, setViolations] = useState<Violation[] | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  if (error) {
+    throw error;
+  }
 
   function toggleViolations() {
-    expanded ? setExpanded(false) : getViolations();
+    if (isLoading) {
+      return;
+    }
+    if (expanded) {
+      setExpanded(false);
+    } else if (violations) {
+      setExpanded(true);
+    } else {
+      getViolations();
+    }
+  }
+
+  function summaryContent() {
+    if (isLoading) {
+      return (
+        <span className={styles.gettingViolations}>Getting violations...</span>
+      );
+    }
+    if (useCase.violation_count === 0) {
+      return `${useCase.name} has no violations.`;
+    }
+    return (
+      <span>
+        {useCase.name} has{' '}
+        <span className={styles.violationNumber}>
+          {useCase.violation_count}
+        </span>{' '}
+        violations.
+      </span>
+    );
   }
 
   async function getViolations(): Promise<void> {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
+      const base = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
       const response = await fetch(
-        `http://localhost:${port}/api/analysis/violations/${useCase.id}`
+        `${base}/api/cave/${owner}/${repo}/violations/${encodeURIComponent(useCase.id)}`
       );
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(
+          response.status === 404
+            ? 'This session has expired. Start a new one.'
+            : `HTTP ${response.status}: ${response.statusText}`
+        );
       }
       setViolations(await response.json());
       setExpanded(true);
     } catch (err) {
-      console.error(
-        err instanceof Error ? err.message : 'Something went wrong.'
-      );
+      setError(err instanceof Error ? err : new Error('Something went wrong.'));
     } finally {
       setIsLoading(false);
     }
@@ -69,53 +111,39 @@ export const UseCaseDisplay = ({ useCase, port }: UseCaseDisplayProps) => {
       }}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        {useCase.violation_count !== 0 ? (
-          <span>
-            {useCase.name} has{' '}
-            <span className={styles.violationNumber}>
-              {useCase.violation_count}
-            </span>{' '}
-            violations.
-          </span>
-        ) : (
-          `${useCase.name} has no violations.`
-        )}
+        {summaryContent()}
       </AccordionSummary>
       <AccordionDetails
         sx={{
           paddingTop: '0px',
         }}
       >
-        {isLoading ? (
-          <div className={styles.gettingViolations}>Getting violations...</div>
-        ) : (
-          <div className={styles.violationContainer}>
-            {violations.map((violation) => (
-              <div key={violation.id} className={styles.violationCard}>
-                <p className={styles.violationDescription}>
-                  Violation of type "{violation.type}" in{' '}
-                  <span className={styles.violationFileName}>
-                    {violation.file_context.file}
-                  </span>{' '}
-                  at line {violation.file_context.line_number}:
+        <div className={styles.violationContainer}>
+          {violations?.map((violation) => (
+            <div key={violation.id} className={styles.violationCard}>
+              <p className={styles.violationDescription}>
+                Violation of type "{violation.type}" in{' '}
+                <span className={styles.violationFileName}>
+                  {violation.file_context.file}
+                </span>{' '}
+                at line {violation.file_context.line_number}:
+              </p>
+              <p className={`text-mono ${styles.violationSnippet}`}>
+                {violation.file_context.snippet}
+              </p>
+              {violation.message && (
+                <p className={styles.violationExtraInfo}>
+                  Message: {violation.message}
                 </p>
-                <p className={`text-mono ${styles.violationSnippet}`}>
-                  {violation.file_context.snippet}
+              )}
+              {violation.suggestion !== '' && (
+                <p className={styles.violationExtraInfo}>
+                  Suggestion: {violation.suggestion}
                 </p>
-                {violation.message && (
-                  <p className={styles.violationExtraInfo}>
-                    Message: {violation.message}
-                  </p>
-                )}
-                {violation.suggestion !== '' && (
-                  <p className={styles.violationExtraInfo}>
-                    Suggestion: {violation.suggestion}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+              )}
+            </div>
+          ))}
+        </div>
       </AccordionDetails>
     </Accordion>
   );

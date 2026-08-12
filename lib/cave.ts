@@ -3,6 +3,7 @@ import type { ChildProcess } from 'node:child_process';
 import { spawn } from 'node:child_process';
 import { rm } from 'node:fs/promises';
 import { createInterface } from 'node:readline';
+import { CaveError } from '@/lib/cave-error';
 import { addRepository } from '@/lib/repo-registry';
 
 const timeoutMs = 10000;
@@ -69,8 +70,9 @@ export async function runCaveOnDir(
   } catch (error) {
     cave.kill('SIGTERM'); // TODO: more robust termination
     await rm(tempDir, { recursive: true, force: true });
-    throw new Error(
-      `Could not remove repository at ${tempDir}: ${(error as Error).message}`
+    throw new CaveError(
+      'ANALYSIS_FAILED',
+      `Could not start cave for ${owner}/${repo} at ${tempDir}: ${(error as Error).message}`
     );
   }
 }

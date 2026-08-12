@@ -33,7 +33,15 @@ function assertStateNever(value: never): never {
   throw new Error(`Unexpected state: ${JSON.stringify(value)}`);
 }
 
-const StatusView = ({ state, port }: { state: State; port: number }) => {
+const StatusView = ({
+  state,
+  owner,
+  repo,
+}: {
+  state: State;
+  owner: string;
+  repo: string;
+}) => {
   switch (state.status) {
     case 'loading':
       return <p>Waiting for response...</p>;
@@ -48,7 +56,12 @@ const StatusView = ({ state, port }: { state: State; port: number }) => {
           </h1>
           <div className={styles.useCasesContainer}>
             {useCasesSorted.map((useCase) => (
-              <UseCaseDisplay key={useCase.id} useCase={useCase} port={port} />
+              <UseCaseDisplay
+                key={useCase.id}
+                useCase={useCase}
+                owner={owner}
+                repo={repo}
+              />
             ))}
           </div>
         </div>
@@ -61,7 +74,7 @@ const StatusView = ({ state, port }: { state: State; port: number }) => {
   }
 };
 
-export const Dashboard = ({ port }: { port: number }) => {
+export const Dashboard = ({ owner, repo }: { owner: string; repo: string }) => {
   const [state, setState] = useState<State>(initialState);
 
   useEffect(() => {
@@ -69,12 +82,17 @@ export const Dashboard = ({ port }: { port: number }) => {
     setState(initialState);
 
     async function getSummary() {
+      const base = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
       try {
         const response = await fetch(
-          `http://localhost:${port}/api/analysis/summary`
+          `${base}/api/cave/${owner}/${repo}/summary`
         );
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          throw new Error(
+            response.status === 404
+              ? 'This session has expired. Start a new one.'
+              : `HTTP ${response.status}: ${response.statusText}`
+          );
         }
 
         const data = await response.json();
@@ -96,7 +114,7 @@ export const Dashboard = ({ port }: { port: number }) => {
     return () => {
       ignore = true;
     };
-  }, [port]);
+  }, [owner, repo]);
 
-  return <StatusView state={state} port={port} />;
+  return <StatusView state={state} owner={owner} repo={repo} />;
 };

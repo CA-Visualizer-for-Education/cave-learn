@@ -12,6 +12,7 @@ jest.mock('@/lib/repo-registry', () => ({
   hasRepository: jest.fn(),
   getRepositoryCommitSha: jest.fn(),
   removeRepository: jest.fn(),
+  updateLastUsed: jest.fn(),
 }));
 
 const getLatestCommitSha = jest.mocked(github.getLatestCommitSha);

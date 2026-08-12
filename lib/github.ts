@@ -6,6 +6,7 @@ import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import type { ReadableStream } from 'node:stream/web';
 import * as tar from 'tar';
+import { CaveError } from '@/lib/cave-error';
 
 export async function getLatestCommitSha(
   owner: string,
@@ -16,7 +17,8 @@ export async function getLatestCommitSha(
     `https://api.github.com/repos/${owner}/${repo}/commits/${ref}`
   );
   if (!commitInfoResponse.ok) {
-    throw new Error(
+    throw new CaveError(
+      'REPO_UNAVAILABLE',
       `Fetching sha of HEAD of repository ${repo} with owner ${owner} failed: ${commitInfoResponse.status}`
     );
   }
@@ -32,7 +34,8 @@ export async function fetchGithubRepo(
     `https://api.github.com/repos/${owner}/${repo}/tarball/${commitSha}`
   );
   if (!response.ok || !response.body) {
-    throw new Error(
+    throw new CaveError(
+      'REPO_UNAVAILABLE',
       `Failed to download tarball from ${repo} with owner ${owner}: ${response.status}`
     );
   }

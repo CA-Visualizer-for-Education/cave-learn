@@ -1,11 +1,14 @@
+import { notFound } from 'next/navigation';
 import { Dashboard } from '@/components/testyourrepo/Dashboard';
-import { getRepositoryPort } from '@/lib/repo-registry';
+import { hasRepository } from '@/lib/repo-registry';
 
 export default async function OwnerRepoPage(
   props: PageProps<'/testyourrepo/[owner]/[repo]'>
 ) {
   const { owner, repo } = await props.params;
-  const port = getRepositoryPort(owner, repo);
+  if (!hasRepository(owner, repo)) {
+    notFound();
+  }
   return (
     <main className="page-shell">
       <section className="content-area">
@@ -15,7 +18,7 @@ export default async function OwnerRepoPage(
         <p className="text-body">
           Check if your project follows clean architecture!
         </p>
-        <Dashboard port={port} />
+        <Dashboard owner={owner} repo={repo} />
       </section>
     </main>
   );

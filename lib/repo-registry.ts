@@ -111,6 +111,11 @@ export function addRepository(
   });
 }
 
+export function updateLastUsed(owner: string, repo: string) {
+  const entry = getRepository(owner, repo);
+  entry.lastUsed = Date.now();
+}
+
 export function hasRepository(owner: string, repo: string): boolean {
   return repositories.has(makeKey(owner, repo));
 }

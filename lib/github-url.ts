@@ -1,9 +1,16 @@
+import { CaveError } from '@/lib/cave-error';
+
 export type GitHubRepo = { owner: string; repo: string };
 
 export function parseGithubUrl(url: string): GitHubRepo {
-  const urlObj = new URL(url);
+  let urlObj: URL;
+  try {
+    urlObj = new URL(url);
+  } catch {
+    throw new CaveError('INVALID_URL', `Invalid GitHub repository URL: ${url}`);
+  }
   if (urlObj.hostname !== 'github.com') {
-    throw new Error(`Not a GitHub repository: ${url}`);
+    throw new CaveError('INVALID_URL', `Not a GitHub repository: ${url}`);
   }
   const [, owner, rawRepo] = urlObj.pathname.split('/');
   const repo = rawRepo?.replace(/\.git$/, '');
@@ -14,7 +21,7 @@ export function parseGithubUrl(url: string): GitHubRepo {
     !validSegment.test(owner) ||
     !validSegment.test(repo)
   ) {
-    throw new Error(`Invalid GitHub repository URL: ${url}`);
+    throw new CaveError('INVALID_URL', `Invalid GitHub repository URL: ${url}`);
   }
 
   return { owner, repo };
